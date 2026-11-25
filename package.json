@@ -1,0 +1,22 @@
+{
+  "name": "proaccountant-syria",
+  "version": "3.4.0",
+  "description": "محاسب محترف سوريا — ProAccountant Syria (offline accounting app)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test www/tests/",
+    "sync": "npx cap sync android",
+    "open": "npx cap open android",
+    "build:aab": "npx cap sync android && cd android && ./gradlew bundleRelease",
+    "build:apk": "npx cap sync android && cd android && ./gradlew assembleRelease"
+  },
+  "keywords": [],
+  "author": "Basel Mohammed Al-Kabor",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/cli": "^8.6.2",
+    "@capacitor/core": "^8.6.2"
+  }
+}

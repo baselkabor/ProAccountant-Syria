@@ -1,0 +1,205 @@
+/* ProAccountant Syria — التنسيقات المخصصة */
+        :root {
+            --bg-dark: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-card: #263349;
+            --accent-gold: #eab308;
+            --accent-gold-hover: #ca8a04;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #eab308; }
+
+        .amin-btn {
+            transition: all 0.15s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .amin-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.15);
+        }
+        .amin-btn.active {
+            background: linear-gradient(135deg, #b45309 0%, #eab308 100%);
+            color: #0f172a;
+            font-weight: 800;
+            border-color: #fde047;
+        }
+        .amin-btn.active svg { stroke: #0f172a; }
+
+        .amin-input {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .amin-input:focus {
+            outline: none;
+            border-color: #eab308;
+            box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.25);
+            background-color: #162032;
+        }
+
+        #print-area { display: none; }
+
+        body.day-mode {
+            --bg-dark: #f1f5f9;
+            --bg-panel: #ffffff;
+            --bg-card: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: #cbd5e1;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        body.day-mode header,
+        body.day-mode nav,
+        body.day-mode footer {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.day-mode section > div,
+        body.day-mode .bg-slate-800,
+        body.day-mode .bg-slate-800\/90,
+        body.day-mode .bg-slate-800\/80,
+        body.day-mode .bg-slate-800\/70,
+        body.day-mode .bg-slate-800\/40,
+        body.day-mode .bg-slate-900,
+        body.day-mode .bg-slate-900\/90,
+        body.day-mode .bg-slate-900\/80,
+        body.day-mode .bg-slate-900\/70,
+        body.day-mode .bg-slate-900\/60,
+        body.day-mode .bg-slate-900\/50 {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.day-mode .amin-btn {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+        }
+        body.day-mode .amin-btn.active {
+            background: linear-gradient(135deg, #d97706 0%, #eab308 100%) !important;
+            color: #0f172a !important;
+            border-color: #b45309 !important;
+        }
+        body.day-mode .amin-input,
+        body.day-mode #exchange-rate-input {
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+            border-color: #94a3b8 !important;
+        }
+        body.day-mode th {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        body.day-mode .text-slate-200,
+        body.day-mode .text-slate-300,
+        body.day-mode .text-slate-400 {
+            color: #334155 !important;
+        }
+        body.day-mode #gdrive-sync-container,
+        body.day-mode #gdrive-sync-container * {
+            color: revert;
+        }
+
+
+        @media print {
+            @page {
+                margin: 5mm;
+            }
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                height: auto !important;
+                min-height: 0 !important;
+                overflow: visible !important;
+            }
+            body.is-printing > *:not(#print-area) {
+                display: none !important;
+            }
+            body:not(.is-printing) * {
+                visibility: hidden !important;
+            }
+            body:not(.is-printing) #print-area,
+            body:not(.is-printing) #print-area * {
+                visibility: visible !important;
+            }
+            #print-area {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #print-area * {
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            body.print-thermal #print-area {
+                width: 76mm !important;
+                max-width: 76mm !important;
+                font-size: 11px !important;
+                padding: 2mm !important;
+            }
+            body.print-a4 #print-area {
+                width: 100% !important;
+                max-width: 190mm !important;
+                padding: 5mm !important;
+                font-size: 13px !important;
+            }
+            .no-print { display: none !important; }
+        }
+
+/* ===== App Shell (تنقّل بأسلوب تطبيقات الجوال) ===== */
+body.app-shell header nav{display:none}
+body.app-shell header p{display:none}
+body.app-shell header .w-10{display:none}
+body.app-shell main{padding:10px}
+body.app-shell footer{display:none}
+#app-subbar{position:sticky;top:0;z-index:35;display:none;align-items:center;gap:10px;padding:8px 12px;background:#0b1730;border-bottom:1px solid #1e3a5f}
+#app-subbar.show{display:flex}
+#app-subbar button{background:#1e3a5f;color:#e0f2fe;border:1px solid #2b5c8f;border-radius:12px;min-width:44px;height:44px;font-size:20px;font-weight:800}
+#app-subbar .ttl{flex:1;text-align:center;color:#e0f2fe;font-weight:800;font-size:17px}
+#view-home .grid>button{background:linear-gradient(160deg,#1d4b78,#163a60)!important;border:1px solid #3b7fb8!important;border-radius:20px!important;min-height:104px;box-shadow:0 6px 14px rgba(2,20,50,.45);transition:transform .12s}
+#view-home .grid>button:active{transform:scale(.95)}
+#view-home .grid>button span:first-child{font-size:34px!important}
+body.day-mode #app-subbar{background:#fff;border-color:#cbd5e1}
+body.day-mode #app-subbar .ttl{color:#0f172a}
+#picker-modal{position:fixed;inset:0;z-index:9998;background:rgba(2,10,25,.92);display:none;flex-direction:column;padding:10px}
+#picker-modal.show{display:flex}
+#picker-modal .chips{display:flex;gap:8px;overflow-x:auto;padding:6px 0}
+#picker-modal .chip{white-space:nowrap;padding:8px 14px;border-radius:999px;background:#1e3a5f;color:#e0f2fe;font-weight:700;font-size:13px;border:1px solid #2b5c8f}
+#picker-modal .chip.on{background:#0288d1;border-color:#7dd3fc}
+#picker-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;align-content:start;padding:4px 0}
+#picker-grid .card{background:#fff;color:#0f172a;border-radius:16px;padding:12px;text-align:center;font-weight:700;border:2px solid transparent}
+#picker-grid .card.sel{border-color:#0288d1}
+#picker-grid .card .pr{display:inline-block;margin-top:6px;background:#12456f;color:#fff;border-radius:10px;padding:3px 10px;font-size:13px}
+#picker-grid .card small{display:block;color:#64748b;font-weight:500}
+
+*{box-sizing:border-box;}body{font-family:Tahoma,Arial,sans-serif;background:#ffffff;color:#000000;margin:0;padding:16px;direction:rtl;}
+
+#view-home .grid>button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:14px 6px;color:#f1f5f9}

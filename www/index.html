@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>محاسب محترف سوريا | تطوير باسل محمد الخابور</title>
+    <script>
+        window.PA_APP_VERSION = '3.4.0';
+        try {
+            document.documentElement.dataset.theme = localStorage.getItem('pa_theme_mode') === 'day' ? 'light' : 'dark';
+        } catch (e) {
+            document.documentElement.dataset.theme = 'dark';
+        }
+    </script>
+    <!-- ملف التنسيقات المحلي (يعمل بدون إنترنت) -->
+    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="android-theme.css">
+    <link rel="stylesheet" href="print.css">
+    <link rel="stylesheet" href="pa-polish.css">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+    <!-- مكتبات العمل الأوفلاين 100% -->
+    <script src="assets/libs/jsbarcode.all.min.js"></script>
+    <script src="assets/libs/chart.umd.min.js"></script>
+    <script src="assets/libs/qrcode.min.js"></script>
+    <script src="assets/libs/html2pdf.bundle.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- ==================== شاشة قفل الحماية برمز PIN ==================== -->
+    <div id="pin-lock-screen" class="hidden fixed inset-0 bg-slate-950/98 backdrop-blur-md z-[100000] flex flex-col items-center justify-center p-4">
+        <div class="bg-slate-900 border border-amber-500/40 rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-5">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 text-3xl shadow-lg shadow-amber-500/20">
+                🔒
+            </div>
+            <div>
+                <h2 class="text-xl font-black text-amber-400">محاسب محترف سوريا</h2>
+                <p id="pin-lock-subtitle" class="text-xs text-slate-400 mt-1">أدخل رمز الحماية (PIN) لفتح البرنامج</p>
+            </div>
+
+            <div dir="ltr" class="flex justify-center gap-3 py-2" id="pin-dots-container">
+                <span class="pin-dot w-4 h-4 rounded-full border-2 border-amber-400 bg-transparent transition-all"></span>
+                <span class="pin-dot w-4 h-4 rounded-full border-2 border-amber-400 bg-transparent transition-all"></span>
+                <span class="pin-dot w-4 h-4 rounded-full border-2 border-amber-400 bg-transparent transition-all"></span>
+                <span class="pin-dot w-4 h-4 rounded-full border-2 border-amber-400 bg-transparent transition-all"></span>
+            </div>
+
+            <p id="pin-error-msg" class="text-xs font-bold text-rose-400 h-4"></p>
+
+            <div dir="ltr" class="grid grid-cols-3 gap-2.5 max-w-[260px] mx-auto">
+                <button type="button" onclick="enterPinDigit('1')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">1</button>
+                <button type="button" onclick="enterPinDigit('2')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">2</button>
+                <button type="button" onclick="enterPinDigit('3')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">3</button>
+                <button type="button" onclick="enterPinDigit('4')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">4</button>
+                <button type="button" onclick="enterPinDigit('5')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">5</button>
+                <button type="button" onclick="enterPinDigit('6')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">6</button>
+                <button type="button" onclick="enterPinDigit('7')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">7</button>
+                <button type="button" onclick="enterPinDigit('8')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">8</button>
+                <button type="button" onclick="enterPinDigit('9')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">9</button>
+                <button type="button" onclick="clearPinInput()" class="bg-rose-950/60 hover:bg-rose-800 text-rose-300 font-bold text-xs py-3.5 rounded-2xl border border-rose-500/30 transition">مسح</button>
+                <button type="button" onclick="enterPinDigit('0')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-500 active:text-slate-950 text-white font-black text-xl py-3.5 rounded-2xl border border-slate-700 transition">0</button>
+                <button type="button" onclick="backspacePinDigit()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-lg py-3.5 rounded-2xl border border-slate-700 transition">⌫</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== الشريط العلوي ==================== -->
+    <header class="pa-header">
+        <div class="pa-bar">
+            <img src="logo.svg" alt="" class="pa-logo">
+            <h1 class="pa-title">محاسب محترف سوريا</h1>
+            <span class="pa-spacer"></span>
+            <button onclick="showSmartAlerts()" class="relative bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-lg border border-slate-700 transition" title="التنبيهات الذكية للمخزون والديون">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    <span id="alert-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">0</span>
+                </button>
+            <button type="button" id="theme-toggle-btn" class="pa-iconbtn pa-theme-toggle" onclick="toggleThemeMode()" title="وضع نهاري" aria-label="تبديل بين الوضع الليلي والوضع النهاري" aria-pressed="false">
+                <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
+                <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"></path></svg>
+            </button>
+            <button type="button" id="pa-menu-btn" class="pa-iconbtn" aria-label="القائمة" aria-expanded="false">⋮</button>
+        </div>
+        <div id="pa-panel" class="pa-panel">
+            <span id="auto-save-badge" class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">● حفظ تلقائي نشط</span>
+            <div class="flex flex-wrap items-center gap-2 md:gap-3">
+                <div class="flex items-center gap-1.5 bg-slate-800 border border-amber-500/40 px-2.5 py-1.5 rounded-lg">
+                    <span class="text-xs text-amber-400 font-bold">1$ =</span>
+                    <input type="number" id="exchange-rate-input" value="15000" min="1" step="50"
+                        class="w-20 bg-slate-950 text-amber-300 font-bold text-sm text-center rounded px-1.5 py-0.5 border border-slate-700 focus:border-amber-400 focus:outline-none"
+                        title="سعر صرف الدولار مقابل الليرة السورية">
+                    <span class="text-xs text-slate-300 font-bold">ل.س</span>
+                </div>
+
+                
+
+
+
+                <button onclick="lockAppNow()" id="header-lock-btn" class="hidden bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-amber-400 p-2 rounded-lg border border-slate-700 transition" title="قفل البرنامج فوراً">
+                    🔒
+                </button>
+
+                <!-- زر فتح شاشة مزامنة جوجل درايف -->
+                <button onclick="openDriveSyncPanel()" class="flex items-center gap-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition shadow-sm border border-sky-400/30">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M7.71 3.5L1.15 15l3.43 6 6.55-11.5M9.73 15L6.3 21h13.12l3.43-6m-.57-1L15.42 2H8.57l6.86 12h6.85z"/></svg>
+                    <span id="top-drive-btn-label">مزامنة جوجل درايف</span>
+                </button>
+
+                <div class="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-lg border border-slate-700">
+                    <button onclick="exportBackupJSON()" class="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-2.5 py-1.5 rounded-md transition shadow-sm" title="تصدير نسخة إضافية">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span class="hidden sm:inline">تصدير نسخة</span>
+                    </button>
+                    <label class="flex items-center gap-1 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-2.5 py-1.5 rounded-md transition cursor-pointer shadow-sm" title="استعادة البيانات من ملف">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <span class="hidden sm:inline">استرجاع</span>
+                        <input type="file" id="import-json-input" accept=".json" class="hidden" onchange="importBackupJSON(event)">
+                    </label>
+                </div>
+            </div>
+            <div class="pa-dev">تطوير: <b>باسل محمد الخابور</b> | <span dir="ltr">0952575089</span></div>
+        </div>
+    </header>
+
+    <div id="toast-container" class="fixed bottom-12 left-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ==================== المحتوى الرئيسي للتطبيق ==================== -->
+    <main class="flex-grow max-w-full w-full mx-auto p-3 md:p-5">
+
+        <!-- الشاشة الرئيسية السريعة (شبكة النوافذ والطباعة) -->
+        <section id="view-home" class="space-y-4">
+            <div class="bg-slate-800/95 border border-sky-500/30 rounded-2xl p-4 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-2.5">
+                    <h2 class="text-base font-extrabold text-sky-300">الرئيسية</h2>
+                    <button type="button" onclick="openGlobalSearch()" class="bg-slate-900/90 hover:bg-slate-700 text-sky-300 border border-sky-500/40 px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 transition">
+                        <span>🔍 بحث شامل</span>
+                        <span class="text-[10px] text-slate-400 font-mono hidden sm:inline">(Ctrl+K)</span>
+                    </button>
+                </div>
+
+                <!-- بطاقات KPI الفورية -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+                    <div class="bg-emerald-950/50 border border-emerald-500/40 rounded-2xl p-3">
+                        <div class="text-[11px] font-bold text-emerald-300">مبيعات اليوم</div>
+                        <div id="kpi-today-sales" class="text-lg font-black font-mono text-emerald-400 mt-0.5">$0.00</div>
+                        <div id="kpi-today-count" class="text-[10px] text-slate-400 mt-0.5">0 فاتورة اليوم</div>
+                    </div>
+                    <div class="bg-amber-950/45 border border-amber-500/40 rounded-2xl p-3">
+                        <div class="text-[11px] font-bold text-amber-300">ذمم العملاء (لنا)</div>
+                        <div id="kpi-receivables" class="text-lg font-black font-mono text-amber-400 mt-0.5">$0.00</div>
+                        <div id="kpi-receivables-count" class="text-[10px] text-slate-400 mt-0.5">0 حساب مدين</div>
+                    </div>
+                    <div class="bg-rose-950/45 border border-rose-500/40 rounded-2xl p-3">
+                        <div class="text-[11px] font-bold text-rose-300">ذمم الموردين (علينا)</div>
+                        <div id="kpi-payables" class="text-lg font-black font-mono text-rose-400 mt-0.5">$0.00</div>
+                        <div id="kpi-payables-count" class="text-[10px] text-slate-400 mt-0.5">0 حساب دائن</div>
+                    </div>
+                    <div class="bg-sky-950/50 border border-sky-500/40 rounded-2xl p-3">
+                        <div class="text-[11px] font-bold text-sky-300">قيمة المخزون</div>
+                        <div id="kpi-stock-value" class="text-lg font-black font-mono text-sky-400 mt-0.5">$0.00</div>
+                        <div id="kpi-stock-count" class="text-[10px] text-slate-400 mt-0.5">0 صنف</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2.5 sm:gap-3.5">
+                    <button type="button" onclick="switchTab('sales')"><span>🧾</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">فاتورة مبيعات</span></button>
+                    <button type="button" onclick="switchTab('purchases')"><span>🛒</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">فاتورة مشتريات</span></button>
+                    <button type="button" onclick="switchTab('items')"><span>🏪</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">المخزون والأصناف</span></button>
+                    <button type="button" onclick="switchTab('barcodes')"><span>🏷️</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">الباركود والملصقات</span></button>
+                    <button type="button" onclick="switchTab('accounts')"><span>👥</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">العملاء والموردون</span></button>
+                    <button type="button" onclick="switchTab('vouchers')"><span>💵</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">سندات القبض والدفع</span></button>
+                    <button type="button" onclick="switchTab('returns')"><span>↩️</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">المرتجعات</span></button>
+                    <button type="button" onclick="switchTab('cashboxes')"><span>🏦</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">الصناديق والمصروفات</span></button>
+                    <button type="button" onclick="switchTab('employees')"><span>👔</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">الموظفون والأقساط</span></button>
+                    <button type="button" onclick="switchTab('profit')"><span>📈</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">حركة الشركة والأرباح</span></button>
+                    <button type="button" onclick="switchTab('reports')"><span>📊</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">التقارير وكشف الحساب</span></button>
+                    <button type="button" onclick="switchTab('settings')"><span>⚙️</span><span class="text-xs sm:text-sm font-extrabold text-slate-100">إعدادات التطبيق</span></button>
+                </div>
+
+                <!-- رسم بياني لمبيعات آخر 7 أيام (أوفلاين 100%) -->
+                <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-extrabold text-sky-300">📊 مبيعات آخر 7 أيام ($)</h3>
+                        <span class="text-[10px] text-slate-400">تحديث تلقائي</span>
+                    </div>
+                    <div style="width:100%;height:190px;">
+                        <canvas id="sales-chart" style="width:100%;height:190px;display:block;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- 1. شاشة الفاتورة -->
+        <section id="view-invoice" class="space-y-4">
+            <details class="invoice-tools">
+                <summary>أدوات الإدخال السريع <span>باركود / أمر ذكي</span></summary>
+            <div class="bg-gradient-to-l from-slate-800 via-slate-800 to-amber-950/40 border border-amber-500/40 rounded-2xl p-3 shadow-lg">
+                <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold text-sm shrink-0">
+                        <span class="bg-amber-500/20 p-1.5 rounded-lg">✨</span>
+                        <span>الإدخال الذكي السريع:</span>
+                    </div>
+                    <input type="text" id="smart-input-box" 
+                        placeholder="اكتب جملة حرة مثل: بيع 3 راوتر للزبون أحمد بسعر 25 آجل  (اضغط Enter للتنفيذ)"
+                        class="amin-input flex-grow rounded-xl px-3.5 py-2 text-sm placeholder-slate-400"
+                        onkeydown="if(event.key === 'Enter') parseSmartCommand()">
+                    <button onclick="parseSmartCommand()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm px-4 py-2 rounded-xl transition shrink-0 shadow">
+                        تحليل وتعبئة ⚡
+                    </button>
+                </div>
+            </div>
+
+            <!-- شريط قراءة الباركود السريع (قارئ USB + كاميرا الموبايل) -->
+            <div class="bg-slate-800/90 border border-sky-500/40 rounded-2xl p-3 shadow-lg">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <div class="flex items-center gap-2 text-sky-400 font-bold text-sm shrink-0">
+                        <span class="bg-sky-500/20 p-1.5 rounded-lg">📷</span>
+                        <span>قارئ الباركود:</span>
+                    </div>
+                    <input type="text" id="barcode-scan-input"
+                        placeholder="امسح الباركود بالقارئ أو اكتب الرمز واضغط Enter..."
+                        class="amin-input flex-grow rounded-xl px-3.5 py-2 text-sm font-mono placeholder-slate-400"
+                        onkeydown="if(event.key === 'Enter'){ event.preventDefault(); handleBarcodeScanned(this.value); this.value=''; }">
+                    <button type="button" onclick="openCameraBarcodeScanner('invoice')"
+                        class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm px-4 py-2 rounded-xl transition shrink-0 shadow flex items-center justify-center gap-1.5">
+                        <span>📷 مسح بالكاميرا</span>
+                    </button>
+                </div>
+            </div>
+
+            </details>
+            <div class="invoice-card bg-slate-800/90 border border-slate-700 rounded-2xl shadow-xl overflow-hidden">
+                <div id="invoice-header-banner" class="bg-emerald-950/60 border-b border-emerald-500/30 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span id="invoice-type-badge" class="bg-emerald-500 text-slate-950 font-black px-3 py-1 rounded-lg text-sm">فاتورة مبيعات</span>
+                        <div class="text-sm text-slate-300">
+                            رقم الفاتورة: <span id="inv-number" class="font-mono font-bold text-amber-400 text-base">#1001</span>
+                        </div>
+                    </div>
+
+                    <div class="hidden lg:flex items-center gap-2 text-xs text-slate-400">
+                        <span class="bg-slate-900 px-2 py-1 rounded border border-slate-700"><kbd class="text-amber-400 font-bold">Enter</kbd> تنقل سريع</span>
+                        <span class="bg-slate-900 px-2 py-1 rounded border border-slate-700"><kbd class="text-amber-400 font-bold">F2</kbd> حفظ وترحيل</span>
+                        <span class="bg-slate-900 px-2 py-1 rounded border border-slate-700"><kbd class="text-amber-400 font-bold">F4</kbd> طباعة</span>
+                        <span class="bg-slate-900 px-2 py-1 rounded border border-slate-700"><kbd class="text-amber-400 font-bold">Esc</kbd> فاتورة جديدة</span>
+                    </div>
+                </div>
+
+                <div class="invoice-meta-grid">
+
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">نوع التسديد</label>
+                        <select id="inv-payment-type" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold" onchange="handlePaymentTypeChange()">
+                            <option value="cash">💵 نقدي (صندوق)</option>
+                            <option value="credit">📒 آجل (ذمم)</option>
+                            <option value="installment">🗓️ تقسيط</option>
+                        </select>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs text-slate-400 font-bold mb-1" id="inv-account-label">الزبون / العميل</label>
+                        <div class="flex gap-1.5">
+                            <select id="inv-account-select" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold"></select>
+                            <button onclick="openQuickAccountModal()" class="bg-slate-700 hover:bg-amber-500 hover:text-slate-950 text-amber-400 px-3 rounded-xl font-bold text-lg transition" title="إضافة عميل/مورد جديد بسرعة">+</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">تاريخ الفاتورة</label>
+                        <input type="date" id="inv-date" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-mono">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">عملة الإدخال</label>
+                        <select id="inv-currency" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold text-amber-400" onchange="handleInvoiceCurrencyChange()">
+                            <option value="USD">دولار أمريكي ($)</option>
+                            <option value="SYP">ليرة سورية (ل.س)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="invoice-items-wrap overflow-x-auto">
+                    <table class="invoice-editor-table w-full text-right border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/90 text-slate-300 text-xs uppercase border-b border-slate-700">
+                                <th class="py-3 px-3 w-12 text-center">#</th>
+                                <th class="py-3 px-3 min-w-[220px]">المادة / الخدمة (اختر أو اكتب)</th>
+                                <th class="py-3 px-3 w-28 text-center">الرصيد المتوفر</th>
+                                <th class="py-3 px-3 w-28 text-center">الكمية</th>
+                                <th class="py-3 px-3 w-36 text-center">السعر الإفرادي</th>
+                                <th class="py-3 px-3 w-36 text-center">الإجمالي الفرعي</th>
+                                <th class="py-3 px-3 min-w-[150px]">ملاحظات البند</th>
+                                <th class="py-3 px-3 w-14 text-center">حذف</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-items-body" class="divide-y divide-slate-700/60 text-sm"></tbody>
+                    </table>
+                </div>
+
+                <div class="invoice-notes-row p-3 bg-slate-900/50 border-t border-slate-700 flex flex-wrap items-center justify-between gap-3">
+                    <button onclick="addInvoiceRow(true)" class="flex items-center gap-1.5 bg-slate-700 hover:bg-slate-600 text-amber-400 font-bold text-xs px-3.5 py-2 rounded-xl transition">
+                        <span>+ إضافة سطر جديد</span>
+                    </button>
+                    <input type="text" id="inv-notes" placeholder="ملاحظات عامة على الفاتورة (اختياري)..." class="amin-input flex-grow max-w-md rounded-xl px-3 py-1.5 text-xs">
+                </div>
+
+                <div class="invoice-payment-section p-4 bg-slate-900/70 border-t border-slate-700 space-y-3">
+                    <h3 class="invoice-section-title">بيانات التسديد</h3>
+                    <div class="invoice-payment-grid">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">إضافة إلى صندوق</label>
+                            <select id="inv-cashbox-select" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold text-sky-300"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1" title="الرصيد موحّد لكل الأصناف ولا يُخصم حسب المخزن في هذه النسخة">المخزن (الرصيد موحّد)</label>
+                            <select id="inv-warehouse-select" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">طريقة الدفع</label>
+                            <select id="inv-pay-method" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                                <option value="cash_pay">💵 دفع نقدي</option>
+                                <option value="card_check">💳 بطاقة / شيكة</option>
+                                <option value="bank_transfer">🏦 تحويل بنكي</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">رقم الإيصال (اختياري)</label>
+                            <input type="text" id="inv-receipt-no" placeholder="رقم الإيصال أو المرجع..." class="amin-input w-full rounded-xl px-3 py-2 text-sm font-mono">
+                        </div>
+                    </div>
+
+                    <div id="installment-panel" class="hidden bg-slate-800/90 border border-sky-500/40 rounded-2xl p-3.5 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2">
+                            <span class="text-xs font-extrabold text-sky-300">🗓️ جدولة فاتورة التقسيط</span>
+                            <div class="flex items-center gap-2 text-xs">
+                                <button type="button" id="inst-freq-monthly" onclick="setInstallmentFreq('monthly')" class="px-3 py-1 rounded-lg font-bold bg-sky-600 text-white">شهري</button>
+                                <button type="button" id="inst-freq-weekly" onclick="setInstallmentFreq('weekly')" class="px-3 py-1 rounded-lg font-bold bg-slate-700 text-slate-200">أسبوعي</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs">
+                            <div>
+                                <label class="block text-slate-400 font-bold mb-1">الدفعة الأولى ($)</label>
+                                <input type="number" id="inst-down-payment" value="0" min="0" step="any" oninput="recalculateInstallmentPlan()" class="amin-input w-full rounded-xl px-2.5 py-2 font-bold text-center">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 font-bold mb-1">المتبقي ($)</label>
+                                <input type="text" id="inst-remaining" readonly value="0.00" class="amin-input w-full rounded-xl px-2.5 py-2 font-bold text-amber-300 text-center font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 font-bold mb-1" id="inst-count-label">عدد الأشهر</label>
+                                <input type="number" id="inst-count" value="5" min="1" max="120" step="1" oninput="recalculateInstallmentPlan()" class="amin-input w-full rounded-xl px-2.5 py-2 font-bold text-center font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 font-bold mb-1">قيمة القسط (من الإجمالي)</label>
+                                <input type="text" id="inst-per-total" readonly value="0.00" class="amin-input w-full rounded-xl px-2.5 py-2 font-bold text-emerald-300 text-center font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 font-bold mb-1">قيمة القسط (للمتبقي فقط)</label>
+                                <input type="text" id="inst-per-rem" readonly value="0.00" class="amin-input w-full rounded-xl px-2.5 py-2 font-bold text-sky-300 text-center font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 font-bold mb-1">تاريخ أول قسط</label>
+                                <input type="date" id="inst-first-date" class="amin-input w-full rounded-xl px-2 py-2 font-mono font-bold">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-summary">
+                <div class="invoice-totals">
+                    <div class="invoice-discount-field">
+                        <label id="inv-discount-label" for="inv-discount">الخصم ($)</label>
+                        <input type="number" id="inv-discount" value="0" min="0" step="any" oninput="recalculateInvoice()" class="amin-input">
+                    </div>
+                    <div class="invoice-net-field"><span>الصافي بالدولار</span><strong id="inv-total-usd" dir="ltr">$0.00</strong></div>
+                    <div class="invoice-equivalent-field"><span>المعادل بالليرة السورية</span><strong id="inv-total-syp">0 ل.س</strong></div>
+                </div>
+                <div class="invoice-actions">
+                    <button type="button" onclick="resetInvoiceForm()" class="invoice-reset">فاتورة جديدة</button>
+                    <button type="button" onclick="saveInvoice(false)" class="invoice-save">حفظ وترحيل</button>
+                    <button type="button" onclick="saveAndPrintInvoice('a4')" class="invoice-print">حفظ وطباعة A4</button>
+                    <button type="button" onclick="saveAndPrintInvoice('thermal')" class="invoice-print">حفظ وطباعة 80mm</button>
+                </div>
+            </div>
+            <div class="invoice-history bg-slate-800/70 border border-slate-700 rounded-2xl p-4">
+                <h3 class="text-sm font-extrabold text-amber-400 mb-3">آخر الفواتير المرحلة</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead>
+                            <tr class="text-slate-400 border-b border-slate-700">
+                                <th class="pb-2">الرقم</th>
+                                <th class="pb-2">النوع</th>
+                                <th class="pb-2">التاريخ</th>
+                                <th class="pb-2">العميل / المورد</th>
+                                <th class="pb-2">الدفع</th>
+                                <th class="pb-2">الصافي ($)</th>
+                                <th class="pb-2">المعادل (ل.س)</th>
+                                <th class="pb-2 text-center">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-invoices-list" class="divide-y divide-slate-700/50"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. شاشة السندات -->
+        <section id="view-vouchers" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-lg font-extrabold text-amber-400 border-b border-slate-700 pb-2">تسجيل سند قبض أو دفع</h2>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">نوع السند</label>
+                        <select id="voucher-type" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold" onchange="populateVoucherReturnOptions()">
+                            <option value="receipt">📥 سند قبض (من زبون أو رد من مورد)</option>
+                            <option value="payment">📤 سند دفع (لمورد أو رد لعميل)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">الحساب (الزبون أو المورد)</label>
+                        <select id="voucher-account" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold" onchange="populateVoucherReturnOptions()"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">تسوية مرتجع (اختياري)</label>
+                        <select id="voucher-return" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold"></select>
+                        <p class="text-[11px] text-slate-500 mt-1">يظهر المرتجع فقط عند وجود رصيد دائن قابل للتسوية.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">طريقة السند</label>
+                        <select id="voucher-pay-method" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold">
+                            <option value="cash_pay">💵 نقدي</option>
+                            <option value="card_check">💳 بطاقة / شيكة</option>
+                            <option value="bank_transfer">🏦 تحويل بنكي</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">الصندوق (للنقدي فقط)</label>
+                        <select id="voucher-cashbox" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold"></select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">المبلغ</label>
+                            <input type="number" id="voucher-amount" min="0" step="any" placeholder="0.00" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold text-emerald-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">العملة</label>
+                            <select id="voucher-currency" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold">
+                                <option value="USD">دولار ($)</option>
+                                <option value="SYP">ليرة سورية (ل.س)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">التاريخ</label>
+                        <input type="date" id="voucher-date" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">البيان / الشرح</label>
+                        <input type="text" id="voucher-note" placeholder="مثال: دفعة على الحساب..." class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <button onclick="saveVoucher()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3 rounded-xl transition shadow-lg">
+                        حفظ وترحيل السند
+                    </button>
+                </div>
+
+                <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl">
+                    <h2 class="text-lg font-extrabold text-slate-200 mb-4">سجل السندات النقدية</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400 text-xs">
+                                    <th class="p-3 rounded-r-lg">رقم السند</th>
+                                    <th class="p-3">النوع</th>
+                                    <th class="p-3">التاريخ</th>
+                                    <th class="p-3">الحساب</th>
+                                    <th class="p-3">الصندوق</th>
+                                    <th class="p-3">المبلغ ($)</th>
+                                    <th class="p-3">البيان</th>
+                                    <th class="p-3 rounded-l-lg text-center">طباعة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vouchers-table-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. شاشة الأصناف في المخزن وصناعة الباركود -->
+        <section id="view-items" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                        <h2 class="text-lg font-extrabold text-amber-400">بطاقة صنف / منتج</h2>
+                        <button type="button" onclick="switchTab('barcodes')" class="bg-sky-600/30 hover:bg-sky-600 text-sky-200 hover:text-white border border-sky-500/40 px-2.5 py-1 rounded-lg text-xs font-bold transition">🏷️ طباعة باركود</button>
+                    </div>
+                    <input type="hidden" id="item-edit-id">
+
+                    <!-- صورة المنتج -->
+                    <div class="flex items-center gap-3 bg-slate-900/70 p-2.5 rounded-xl border border-slate-700">
+                        <div id="item-image-preview-box">
+                            <div class="w-16 h-16 rounded-xl border border-dashed border-slate-600 flex items-center justify-center text-2xl text-slate-400">🖼️</div>
+                        </div>
+                        <div class="flex-grow space-y-1.5">
+                            <div class="text-xs font-bold text-slate-300">صورة المنتج (اختياري)</div>
+                            <div class="flex flex-wrap gap-1.5">
+                                <label class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer transition">
+                                    📷 اختيار صورة
+                                    <input type="file" id="item-image-input" accept="image/*" class="hidden" onchange="handleProductImageUpload(event)">
+                                </label>
+                                <button type="button" id="item-image-clear-btn" onclick="clearProductImagePreview()" class="hidden bg-rose-700 hover:bg-rose-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg">حذف</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">اسم الصنف أو الخدمة *</label>
+                        <input type="text" id="item-name" placeholder="مثال: راوتر TP-Link أو اشتراك إنترنت" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">النوع</label>
+                            <select id="item-type" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold" onchange="toggleStockFields()">
+                                <option value="stock">📦 مادة مخزنية</option>
+                                <option value="service">⚡ خدمة / اشتراك</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">التصنيف / المجموعة</label>
+                            <input type="text" id="item-category" value="عام" placeholder="مثال: شبكات، إلكترونيات..." class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">رمز الباركود</label>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="item-code" placeholder="امسح أو اكتب أو ولّد تلقائياً" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-mono">
+                            <button type="button" onclick="generateAutoBarcodeForInput()" class="bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/40 px-2.5 rounded-xl font-bold text-xs shrink-0" title="توليد باركود تلقائي">توليد</button>
+                            <button type="button" onclick="openCameraBarcodeScanner('itemCard')" class="bg-sky-600 hover:bg-sky-500 text-white px-3 rounded-xl font-bold text-sm shrink-0" title="قراءة الباركود بالكاميرا">📷</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">عملة السعر</label>
+                            <select id="item-price-currency" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold text-amber-300" onchange="updateItemPriceLabels()">
+                                <option value="USD">دولار ($)</option>
+                                <option value="SYP">ليرة سورية (ل.س)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label id="item-cost-label" class="block text-xs text-slate-400 font-bold mb-1">سعر التكلفة ($)</label>
+                            <input type="number" id="item-cost" value="0" min="0" step="any" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label id="item-price-label" class="block text-xs text-slate-400 font-bold mb-1">سعر المبيع ($)</label>
+                            <input type="number" id="item-price" value="0" min="0" step="any" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold text-emerald-400">
+                        </div>
+                    </div>
+
+                    <div id="stock-fields-wrapper" class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">الكمية الحالية</label>
+                            <input type="number" id="item-qty" value="0" step="any" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">حد التنبيه الأدنى</label>
+                            <input type="number" id="item-min-qty" value="3" min="0" class="amin-input w-full rounded-xl px-3 py-2 text-sm text-amber-400">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="saveItemCard()" class="flex-grow bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl transition">حفظ الصنف ✔</button>
+                        <button onclick="clearItemForm()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-4 py-2.5 rounded-xl">جديد</button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <h2 class="text-lg font-extrabold text-slate-200">قائمة الأصناف في المخزن</h2>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <input type="text" id="item-search" oninput="renderItemsTable()" placeholder="🔍 ابحث بالاسم أو الباركود أو التصنيف..." class="amin-input rounded-xl px-3 py-1.5 text-sm w-56">
+                            <select id="item-sort-select" onchange="renderItemsTable()" class="amin-input rounded-xl px-3 py-1.5 text-xs font-bold">
+                                <option value="default">الترتيب الافتراضي</option>
+                                <option value="name_asc">أبجدياً (أ - ي)</option>
+                                <option value="qty_desc">الأكثر توفراً بالمخزن</option>
+                                <option value="qty_asc">الأقل مخزوناً (نواقص)</option>
+                                <option value="price_asc">السعر: الأقل أولاً</option>
+                                <option value="price_desc">السعر: الأعلى أولاً</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div id="items-category-chips" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
+                        <button type="button" onclick="printAllBarcodes()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl transition shadow shrink-0">
+                            🏷️ طباعة كل ملصقات الباركود
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400 text-xs">
+                                    <th class="p-3 rounded-r-lg">الصنف والصورة</th>
+                                    <th class="p-3">التصنيف</th>
+                                    <th class="p-3">التكلفة ($)</th>
+                                    <th class="p-3">المبيع ($)</th>
+                                    <th class="p-3">المبيع (ل.س)</th>
+                                    <th class="p-3">الرصيد</th>
+                                    <th class="p-3 rounded-l-lg text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="items-table-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- نافذة صناعة وطباعة لصاقات الباركود -->
+        <section id="view-barcodes" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-3">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-sky-400">🏷️ صناعة الباركود وتحديد عدد اللصاقات</h2>
+                            <p class="text-xs text-slate-400">حدد الأصناف وعدد اللصاقات المطلوبة لكل صنف</p>
+                        </div>
+                        <button type="button" onclick="clearAllBarcodeSelections()" class="bg-slate-700 hover:bg-slate-600 text-xs font-bold px-3 py-1.5 rounded-xl">تصفير الكل</button>
+                    </div>
+
+                    <input type="text" id="barcode-studio-search" oninput="renderBarcodeStudioList()" placeholder="🔍 ابحث عن صنف لإضافة لصاقات باركود له..." class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+
+                    <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400">
+                                    <th class="p-2.5">الصنف</th>
+                                    <th class="p-2.5">الباركود</th>
+                                    <th class="p-2.5">السعر</th>
+                                    <th class="p-2.5 text-center">عدد اللصاقات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="barcode-items-select-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-3">
+                        <h2 class="text-lg font-extrabold text-amber-400">🖨️ معاينة وطباعة اللصاقات</h2>
+                        <span id="barcode-total-labels-badge" class="pro-badge-pill">إجمالي اللصاقات المحددة: 0 ملصق</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs bg-slate-900/70 p-3 rounded-xl border border-slate-700">
+                        <div>
+                            <label class="block text-slate-400 font-bold mb-1">مقاس الملصق</label>
+                            <select id="bc-opt-size" onchange="renderBarcodeLabelsPreview()" class="amin-input w-full rounded-lg px-2 py-1.5 font-bold">
+                                <option value="50x30">50×30 مم (حراري)</option>
+                                <option value="40x25">40×25 مم (صغير)</option>
+                                <option value="a4_grid">ورقة ملصقات A4</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-bold mb-1">عملة السعر</label>
+                            <select id="bc-opt-currency" onchange="renderBarcodeLabelsPreview()" class="amin-input w-full rounded-lg px-2 py-1.5 font-bold">
+                                <option value="USD">دولار ($)</option>
+                                <option value="SYP">ليرة سورية (ل.س)</option>
+                            </select>
+                        </div>
+                        <label class="flex items-center gap-2 cursor-pointer pt-4">
+                            <input type="checkbox" id="bc-opt-company" checked onchange="renderBarcodeLabelsPreview()" class="w-4 h-4">
+                            <span class="font-bold">اسم الشركة</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer pt-4">
+                            <input type="checkbox" id="bc-opt-price" checked onchange="renderBarcodeLabelsPreview()" class="w-4 h-4">
+                            <span class="font-bold">إظهار السعر</span>
+                        </label>
+                    </div>
+
+                    <div id="barcode-labels-preview-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-80 overflow-y-auto p-2 bg-slate-950/60 rounded-xl border border-slate-700"></div>
+
+                    <button type="button" onclick="printSelectedBarcodeLabels()" class="w-full bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-black py-3 rounded-xl text-sm shadow-lg transition">
+                        🖨️ طباعة / تصدير لصاقات الباركود الآن
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. شاشة الزبائن والموردين -->
+        <section id="view-accounts" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-3">
+                    <h2 class="text-lg font-extrabold text-amber-400 border-b border-slate-700 pb-2">بطاقة زبون / مورد</h2>
+                    <input type="hidden" id="acc-edit-id">
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">الاسم الكامل *</label>
+                        <input type="text" id="acc-name" placeholder="اسم الزبون أو الشركة الموردة" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">تصنيف الحساب</label>
+                            <select id="acc-type" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                                <option value="customer">زبون (عميل)</option>
+                                <option value="supplier">مورد</option>
+                                <option value="both">زبون ومورد معاً</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">رقم الهاتف</label>
+                            <input type="text" id="acc-phone" placeholder="09xxxxxxxx" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-mono">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">العنوان / المنطقة</label>
+                        <input type="text" id="acc-address" placeholder="دمشق / حلب / درعا..." class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">الرصيد الافتتاحي ($) <span class="text-[10px] text-slate-400">(موجب = لنا عليه، سالب = له علينا)</span></label>
+                        <input type="number" id="acc-opening" value="0" step="any" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                    </div>
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="saveAccountCard()" class="flex-grow bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl transition">حفظ الحساب</button>
+                        <button onclick="clearAccountForm()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-4 py-2.5 rounded-xl">جديد</button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <h2 class="text-lg font-extrabold text-slate-200">دليل الزبائن والموردين والأرصدة</h2>
+                        <input type="text" id="acc-search" oninput="renderAccountsTable()" placeholder="بحث بالاسم أو الهاتف..." class="amin-input rounded-xl px-3 py-1.5 text-sm w-60">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400 text-xs">
+                                    <th class="p-3 rounded-r-lg">الاسم</th>
+                                    <th class="p-3">التصنيف</th>
+                                    <th class="p-3">الهاتف</th>
+                                    <th class="p-3">الرصيد الحالي ($)</th>
+                                    <th class="p-3">الحالة</th>
+                                    <th class="p-3 rounded-l-lg text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accounts-table-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. شاشة التقارير -->
+        <section id="view-reports" class="hidden space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                <div class="bg-slate-800 border border-slate-700 p-4 rounded-2xl">
+                    <div class="text-xs text-slate-400 font-bold">إجمالي المبيعات</div>
+                    <div id="rep-total-sales" class="text-xl font-black text-emerald-400 mt-1 font-mono">$0.00</div>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-4 rounded-2xl">
+                    <div class="text-xs text-slate-400 font-bold">إجمالي المشتريات</div>
+                    <div id="rep-total-purchases" class="text-xl font-black text-sky-400 mt-1 font-mono">$0.00</div>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-4 rounded-2xl">
+                    <div class="text-xs text-slate-400 font-bold">ديون لنا عند الزبائن</div>
+                    <div id="rep-receivables" class="text-xl font-black text-amber-400 mt-1 font-mono">$0.00</div>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-4 rounded-2xl">
+                    <div class="text-xs text-slate-400 font-bold">ديون علينا للموردين</div>
+                    <div id="rep-payables" class="text-xl font-black text-rose-400 mt-1 font-mono">$0.00</div>
+                </div>
+                <div class="bg-gradient-to-br from-emerald-950 to-slate-800 border border-emerald-500/40 p-4 rounded-2xl">
+                    <div class="text-xs text-emerald-300 font-bold">صافي الربح التقديري</div>
+                    <div id="rep-net-profit" class="text-xl font-black text-emerald-400 mt-1 font-mono">$0.00</div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3">
+                    <h2 class="text-lg font-extrabold text-amber-400">كشف حساب تفصيلي (حركة عميل / مورد)</h2>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="statement-account-select" onchange="renderAccountStatement()" class="amin-input rounded-xl px-3 py-2 text-sm font-bold min-w-[220px]"></select>
+                        <button onclick="printStatementA4()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                            🖨️ طباعة كشف الحساب A4
+                        </button>
+                        <button onclick="exportStatementPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                            📄 تصدير PDF
+                        </button>
+                        <button onclick="switchTab('eod')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition">
+                            🗓️ حركات الفواتير ونهاية اليوم
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead>
+                            <tr class="bg-slate-900 text-slate-400 text-xs">
+                                <th class="p-3">التاريخ</th>
+                                <th class="p-3">المرجع / العملية</th>
+                                <th class="p-3">البيان</th>
+                                <th class="p-3">مدين (عليه $)</th>
+                                <th class="p-3">دائن (له $)</th>
+                                <th class="p-3">الرصيد التراكمي ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statement-table-body" class="divide-y divide-slate-700/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-extrabold text-slate-200">تقرير جرد المستودع وتقييم البضاعة</h2>
+                    <span id="inventory-total-value" class="text-sm font-bold text-amber-400 bg-slate-900 px-3 py-1 rounded-lg border border-slate-700">قيمة المخزون بالتكلفة: $0.00</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead>
+                            <tr class="bg-slate-900 text-slate-400 text-xs">
+                                <th class="p-3">المادة</th>
+                                <th class="p-3">الكمية المتوفرة</th>
+                                <th class="p-3">سعر التكلفة ($)</th>
+                                <th class="p-3">إجمالي قيمة التكلفة ($)</th>
+                                <th class="p-3">سعر المبيع ($)</th>
+                                <th class="p-3">حالة المخزون</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-report-body" class="divide-y divide-slate-700/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- شاشة مرتجع فاتورة -->
+        <section id="view-returns" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-lg font-extrabold text-orange-400 border-b border-slate-700 pb-2">تسجيل مرتجع فاتورة</h2>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">نوع المرتجع</label>
+                        <select id="ret-type" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold" onchange="populateReturnsDropdowns()">
+                            <option value="sales_return">↩️ مرتجع مبيعات (إعادة للمخزون / تخفيض ذمة زبون)</option>
+                            <option value="purchase_return">↪️ مرتجع مشتريات (إخراج للمورد / تخفيض ذمة مورد)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">الفاتورة الأصلية *</label>
+                        <select id="ret-invoice" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold" onchange="onReturnInvoiceChange()"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">الحساب (الزبون أو المورد)</label>
+                        <select id="ret-account" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">صندوق الرد (للمرتجع النقدي)</label>
+                        <select id="ret-cashbox" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold"></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">المادة المرتجعة *</label>
+                        <select id="ret-item" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-bold" onchange="onReturnItemChange()"></select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">الكمية المرتجعة</label>
+                            <input type="number" id="ret-qty" value="1" min="0.01" step="any" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold text-center">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">سعر الوحدة ($)</label>
+                            <input type="number" id="ret-price-usd" value="0" min="0" step="any" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold text-amber-300 text-center">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">التاريخ</label>
+                        <input type="date" id="ret-date" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">البيان / السبب</label>
+                        <input type="text" id="ret-note" placeholder="مثال: مرتجع بضاعة / فرق كمية..." class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <button onclick="saveReturnRecord()" class="w-full bg-orange-500 hover:bg-orange-400 text-slate-950 font-black py-3 rounded-xl transition shadow-lg">
+                        حفظ وترحيل المرتجع ✔
+                    </button>
+                </div>
+
+                <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl">
+                    <h2 class="text-lg font-extrabold text-slate-200 mb-4">سجل المرتجعات</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400 text-xs">
+                                    <th class="p-3 rounded-r-lg">الرقم</th>
+                                    <th class="p-3">النوع</th>
+                                    <th class="p-3">التاريخ</th>
+                                    <th class="p-3">الحساب</th>
+                                    <th class="p-3">الصندوق</th>
+                                    <th class="p-3">حالة التسوية</th>
+                                    <th class="p-3">المادة</th>
+                                    <th class="p-3">الكمية</th>
+                                    <th class="p-3">الإجمالي ($)</th>
+                                    <th class="p-3 rounded-l-lg text-center">طباعة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="returns-table-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- نافذة مستقلة: حركات الفواتير بالتفصيل وتقرير نهاية اليوم -->
+        <section id="view-eod" class="hidden space-y-5">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3">
+                    <h2 class="text-lg font-extrabold text-amber-400">حركات الفواتير بالتفصيل</h2>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="inv-detail-filter-type" onchange="renderDetailedInvoicesReport()" class="amin-input rounded-xl px-3 py-2 text-xs font-bold">
+                            <option value="all">كل الفواتير</option>
+                            <option value="sales">فواتير المبيعات</option>
+                            <option value="purchase">فواتير المشتريات</option>
+                        </select>
+                        <input type="text" id="inv-detail-search" oninput="renderDetailedInvoicesReport()" placeholder="بحث برقم الفاتورة أو اسم الحساب..." class="amin-input rounded-xl px-3 py-2 text-xs w-60">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead>
+                            <tr class="bg-slate-900 text-slate-400 text-xs">
+                                <th class="p-3">الرقم</th>
+                                <th class="p-3">النوع</th>
+                                <th class="p-3">التاريخ</th>
+                                <th class="p-3">العميل / المورد</th>
+                                <th class="p-3">الدفع</th>
+                                <th class="p-3">تفاصيل المواد</th>
+                                <th class="p-3">الصافي ($)</th>
+                                <th class="p-3">المعادل (ل.س)</th>
+                                <th class="p-3 text-center">طباعة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailed-invoices-body" class="divide-y divide-slate-700/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 border border-amber-500/40 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3">
+                    <h2 class="text-lg font-extrabold text-amber-400">تقرير شامل بنهاية اليوم</h2>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <input type="date" id="eod-report-date" onchange="renderEndOfDayReport()" class="amin-input rounded-xl px-3 py-2 text-xs font-mono font-bold">
+                        <button onclick="printEndOfDayReportA4()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold px-4 py-2.5 rounded-xl transition">
+                            🖨️ طباعة تقرير نهاية اليوم A4
+                        </button>
+                    </div>
+                </div>
+
+                <div id="eod-summary-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm"></div>
+            </div>
+        </section>
+
+
+        <!-- شاشة الصناديق والمصروفات والمخازن -->
+        <section id="view-cashboxes" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-lg font-extrabold text-sky-400 border-b border-slate-700 pb-2">🏦 إدارة الصناديق والمخازن</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">اسم الصندوق الجديد</label>
+                            <input type="text" id="new-cashbox-name" placeholder="مثال: الصندوق الرئيسي أو صندوق المحل" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">رصيد افتتاحي ($)</label>
+                            <input type="number" id="new-cashbox-bal" value="0" step="any" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                        </div>
+                    </div>
+                    <button onclick="addCashboxItem()" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs transition">+ إضافة صندوق</button>
+
+                    <div id="cashboxes-list" class="space-y-2 pt-2"></div>
+
+                    <hr class="border-slate-700">
+                    <div class="flex gap-2">
+                        <input type="text" id="new-warehouse-name" placeholder="اسم مخزن أو تصنيف صنف جديد..." class="amin-input flex-grow rounded-xl px-3 py-2 text-sm">
+                        <button onclick="addWarehouseItem()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-4 py-2 rounded-xl text-xs transition">+ إضافة مخزن</button>
+                    </div>
+                    <div id="warehouses-list" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-lg font-extrabold text-rose-400 border-b border-slate-700 pb-2">💸 تسجيل المصروفات والإيرادات</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">النوع</label>
+                            <select id="exp-kind" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                                <option value="expense">مصروف</option>
+                                <option value="revenue">إيراد إضافي</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">الصندوق</label>
+                            <select id="exp-cashbox" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">المبلغ ($)</label>
+                            <input type="number" id="exp-amount" min="0" step="any" placeholder="0.00" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">التاريخ</label>
+                            <input type="date" id="exp-date" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-mono">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">البيان / الوصف</label>
+                        <input type="text" id="exp-title" placeholder="مثال: كهرباء، إيجار، صيانة، إنترنت..." class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <button onclick="saveExpenseOrRevenue()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-black py-2.5 rounded-xl text-sm transition">حفظ الحركة المالية ✔</button>
+
+                    <div class="overflow-x-auto max-h-64 overflow-y-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400">
+                                    <th class="p-2.5">التاريخ</th>
+                                    <th class="p-2.5">النوع</th>
+                                    <th class="p-2.5">الصندوق</th>
+                                    <th class="p-2.5">البيان</th>
+                                    <th class="p-2.5">المبلغ ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenses-table-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- شاشة الموظفين والأقساط ومتابعة الديون -->
+        <section id="view-employees" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-lg font-extrabold text-amber-400 border-b border-slate-700 pb-2">👔 الموظفون والعمال</h2>
+                    <input type="hidden" id="emp-edit-id">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        <input type="text" id="emp-name" placeholder="اسم الموظف / العامل *" class="amin-input rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="emp-role" placeholder="المسمى / الوظيفة" class="amin-input rounded-xl px-3 py-2 text-sm">
+                        <input type="number" id="emp-salary" placeholder="الراتب الشهري ($)" step="any" class="amin-input rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" id="emp-save-btn" onclick="addEmployeeRecord()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition">+ إضافة موظف</button>
+                        <button type="button" id="emp-cancel-btn" onclick="clearEmployeeForm()" class="hidden bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-3.5 py-2 rounded-xl text-xs transition">إلغاء التعديل</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400">
+                                    <th class="p-2.5">الاسم</th>
+                                    <th class="p-2.5">الوظيفة</th>
+                                    <th class="p-2.5">الراتب ($)</th>
+                                    <th class="p-2.5 text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="employees-table-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                    <h2 class="text-lg font-extrabold text-sky-400 border-b border-slate-700 pb-2">🗓️ جدول الأقساط المستحقة</h2>
+                    <div class="overflow-x-auto max-h-72 overflow-y-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-400">
+                                    <th class="p-2.5">العميل</th>
+                                    <th class="p-2.5">الفاتورة</th>
+                                    <th class="p-2.5">القسط #</th>
+                                    <th class="p-2.5">الاستحقاق</th>
+                                    <th class="p-2.5">القيمة ($)</th>
+                                    <th class="p-2.5">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="installments-table-body" class="divide-y divide-slate-700/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-3">
+                    <h2 class="text-lg font-extrabold text-emerald-400">📲 متابعة العملاء والديون المستحقة (واتساب / اتصال / SMS)</h2>
+                    <input type="text" id="debt-followup-search" oninput="renderDebtFollowupTable()" placeholder="بحث باسم العميل أو الهاتف..." class="amin-input rounded-xl px-3 py-1.5 text-xs w-60">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead>
+                            <tr class="bg-slate-900 text-slate-400">
+                                <th class="p-3">العميل</th>
+                                <th class="p-3">الهاتف</th>
+                                <th class="p-3">المبلغ المتبقي ($)</th>
+                                <th class="p-3 text-center">إجراءات التواصل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="debt-followup-body" class="divide-y divide-slate-700/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- شاشة حركة الصندوق والأرباح والتقارير الشاملة -->
+        <section id="view-profit" class="hidden space-y-5">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3">
+                    <h2 class="text-lg font-extrabold text-amber-400">📈 حركة الصندوق والأرباح لحظة بلحظة</h2>
+                    <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                        <button type="button" onclick="setProfitPeriod('all')" id="prof-p-all" class="px-3 py-1.5 rounded-lg font-bold bg-sky-600 text-white">الكل</button>
+                        <button type="button" onclick="setProfitPeriod('daily')" id="prof-p-daily" class="px-3 py-1.5 rounded-lg font-bold bg-slate-900 text-slate-300">يومي</button>
+                        <button type="button" onclick="setProfitPeriod('monthly')" id="prof-p-monthly" class="px-3 py-1.5 rounded-lg font-bold bg-slate-900 text-slate-300">شهري</button>
+                        <input type="date" id="prof-custom-date" onchange="setProfitPeriod('custom')" class="amin-input rounded-lg px-2 py-1 font-mono">
+                    </div>
+                </div>
+                <div id="profit-metrics-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+                <h2 class="text-lg font-extrabold text-sky-400 border-b border-slate-700 pb-2">📊 تقارير شاملة</h2>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 text-xs">
+                    <button onclick="openComprehensiveReport('items_sales')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">📦 مبيعات الأصناف</button>
+                    <button onclick="openComprehensiveReport('customers_move')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">👥 تقرير بحركة العملاء</button>
+                    <button onclick="openComprehensiveReport('suppliers_move')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">🚚 تقرير بحركة الموردين</button>
+                    <button onclick="openComprehensiveReport('item_move')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">🏷️ تقرير بحركة الصنف</button>
+                    <button onclick="openComprehensiveReport('customer_profit')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">💰 تقرير بأرباح العميل</button>
+                    <button onclick="openComprehensiveReport('supplier_purchases')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">🧾 تقرير بمشتريات المورد</button>
+                    <button onclick="openComprehensiveReport('workers_move')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">👷 تقرير بحركة العمال</button>
+                    <button onclick="openComprehensiveReport('remaining_installments')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">⏳ تقرير بالأقساط المتبقية</button>
+                    <button onclick="openComprehensiveReport('pnl')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">⚖️ تقرير بالأرباح والخسائر</button>
+                    <button onclick="openComprehensiveReport('all_expenses')" class="bg-slate-900 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl font-bold text-right">📉 تقرير بكافة المصروفات</button>
+                </div>
+
+                <div id="comprehensive-report-output" class="bg-slate-900/70 border border-slate-700 rounded-xl p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 id="comp-report-title" class="text-sm font-extrabold text-amber-400">اختر تقريراً لعرض تفاصيله</h3>
+                        <button onclick="printComprehensiveReport()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg">🖨️ طباعة التقرير</button>
+                    </div>
+                    <div id="comp-report-body" class="overflow-x-auto text-xs"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. شاشة إعدادات التطبيق -->
+        <section id="view-settings" class="hidden space-y-5">
+            <div class="max-w-3xl mx-auto bg-slate-800 border border-slate-700 rounded-2xl p-5 md:p-6 shadow-xl space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 pb-3">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-amber-400">⚙️ إعدادات التطبيق</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">إعدادات الترويسة، الفوترة، الطباعة، الحماية، والنسخ الاحتياطي</p>
+                    </div>
+                    <button type="button" onclick="saveAllAdvancedSettings()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-5 py-2.5 rounded-xl text-xs shadow transition">
+                        ✔ حفظ الإعدادات
+                    </button>
+                </div>
+
+                <!-- 1. الترويسة والفوترة والطباعة -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-extrabold text-sky-400">🧾 الترويسة والفوترة والطباعة</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">اسم المؤسسة / المحل في الفواتير</label>
+                            <input type="text" id="set-company-name" value="محاسب محترف سوريا" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">الإدارة / رقم الهاتف في الترويسة</label>
+                            <input type="text" id="set-company-sub" value="بإدارة باسل محمد الخابور - 0952575089" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between bg-slate-900/70 p-3 rounded-xl border border-slate-700">
+                        <div class="flex items-center gap-3">
+                            <div id="settings-logo-preview" class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-600 flex items-center justify-center text-xl">🏢</div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-200">شعار الشركة في الفواتير المطبوعة (اختياري)</div>
+                                <div class="text-[11px] text-slate-400">يظهر في ترويسة الفاتورة A4 والكاشير</div>
+                            </div>
+                        </div>
+                        <label class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl cursor-pointer transition">
+                            📷 رفع شعار
+                            <input type="file" accept="image/*" class="hidden" onchange="handleCompanyLogoUpload(event)">
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">طريقة الدفع الافتراضية</label>
+                            <select id="set-default-payment" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                                <option value="cash">💵 نقدي (صندوق)</option>
+                                <option value="credit">📒 آجل (ذمم)</option>
+                                <option value="installment">🗓️ تقسيط</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">العملة الافتراضية</label>
+                            <select id="set-default-currency" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                                <option value="USD">دولار أمريكي ($)</option>
+                                <option value="SYP">ليرة سورية (ل.س)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">مقاس الطباعة الافتراضي</label>
+                            <select id="set-default-paper" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                                <option value="a4">ورق رسمي A4</option>
+                                <option value="thermal">طابعة حرارية 80mm</option>
+                                <option value="58mm">طابعة حرارية 58mm</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="flex items-center justify-between bg-slate-900/70 p-3 rounded-xl border border-slate-700 cursor-pointer">
+                            <span class="text-xs font-bold">الطباعة التلقائية بعد حفظ الفاتورة</span>
+                            <input type="checkbox" id="set-auto-print-invoice" class="w-4 h-4">
+                        </label>
+
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">تصميم / قالب الفاتورة المطبوعة</label>
+                            <select id="set-invoice-template" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold text-sky-300">
+                                <option value="modern">🎨 احترافي ملوّن (Modern)</option>
+                                <option value="corporate">🏢 شركات — ترويسة ملوّنة (Corporate)</option>
+                                <option value="classic">🏛️ رسمي كلاسيكي (Classic)</option>
+                                <option value="simple">✨ بسيط خفيف (Minimal)</option>
+                                <option value="plain">📄 أبيض وأسود موفّر للحبر (Plain)</option>
+                                <option value="compact">📑 مضغوط للفواتير الطويلة (Compact)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">الرقم الضريبي / السجل التجاري (اختياري)</label>
+                            <input type="text" id="set-tax-number" placeholder="مثال: س.ت 12345" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-mono">
+                        </div>
+                    </div>
+
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 font-bold mb-1">اللون الرئيسي للفاتورة</label>
+                            <select id="set-invoice-accent" class="amin-input w-full rounded-xl px-3 py-2 text-sm font-bold">
+                                <option value="">تلقائي (أخضر مبيعات / أزرق مشتريات)</option>
+                                <option value="#0f766e">🟢 أخضر زمردي</option>
+                                <option value="#1d4ed8">🔵 أزرق ملكي</option>
+                                <option value="#4338ca">🟣 نيلي</option>
+                                <option value="#b91c1c">🔴 أحمر داكن</option>
+                                <option value="#c2410c">🟠 برتقالي</option>
+                                <option value="#1f2937">⚫ رمادي فحمي</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <button type="button" onclick="previewInvoiceDesign('a4')" class="flex-1 bg-sky-600 hover:bg-sky-500 text-white rounded-xl px-3 py-2.5 text-xs font-bold">👁️ معاينة A4</button>
+                            <button type="button" onclick="previewInvoiceDesign('thermal')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white rounded-xl px-3 py-2.5 text-xs font-bold">🧾 معاينة 80mm</button>
+                            <button type="button" onclick="previewInvoiceDesign('58mm')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white rounded-xl px-3 py-2.5 text-xs font-bold">🧾 58mm</button>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-400">التصميم يطبَّق على ورق A4؛ الورق الحراري يستخدم تخطيط إيصال مخصصاً بنفس اللون والترويسة. اضغط «حفظ» لاعتماد التغيير بعد المعاينة.</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <label class="flex items-center justify-between bg-slate-900/70 p-3 rounded-xl border border-slate-700 cursor-pointer">
+                            <span class="text-xs font-bold">إظهار رمز QR في الفاتورة</span>
+                            <input type="checkbox" id="set-inv-show-qr" checked class="w-4 h-4">
+                        </label>
+                        <label class="flex items-center justify-between bg-slate-900/70 p-3 rounded-xl border border-slate-700 cursor-pointer">
+                            <span class="text-xs font-bold">إظهار شعار الشركة</span>
+                            <input type="checkbox" id="set-inv-show-logo" checked class="w-4 h-4">
+                        </label>
+                        <label class="flex items-center justify-between bg-slate-900/70 p-3 rounded-xl border border-slate-700 cursor-pointer">
+                            <span class="text-xs font-bold">إظهار رصيد العميل السابق</span>
+                            <input type="checkbox" id="set-inv-show-balance" checked class="w-4 h-4">
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 font-bold mb-1">عبارة تذييل الفاتورة المخصصة</label>
+                        <input type="text" id="set-invoice-footer" value="البضاعة المباعة تُرد وتُستبدل خلال 3 أيام بحالتها الأصلية"
+                            class="amin-input w-full rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <div class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 space-y-2">
+                        <div id="data-size-info" class="text-[11px] text-slate-300 font-bold">—</div>
+                        <button type="button" onclick="restoreLastGoodBackup()" class="w-full bg-amber-600 hover:bg-amber-500 text-white rounded-xl px-3 py-2.5 text-xs font-bold">♻️ استعادة آخر نسخة سليمة بضغطة واحدة</button>
+                        <p class="text-[10px] text-slate-400">تُحفظ تلقائياً نسخة قبل كل عملية حفظ ناجحة، وتُستخدم أيضاً إذا اكتُشف ملف بيانات تالف.</p>
+                    </div>
+                </div>
+
+                <hr class="border-slate-700">
+
+                <!-- 2. قفل الحماية برمز PIN -->
+                <div class="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-amber-400">🔒 قفل الحماية برمز سري (PIN)</h3>
+                            <p class="text-xs text-slate-400">يطلب رمزاً من 4 أرقام عند فتح البرنامج لحماية البيانات</p>
+                        </div>
+                        <span id="pin-status-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700">غير مفعّل</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                        <input type="password" id="new-pin-input" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="رمز PIN جديد (4 أرقام)"
+                            class="amin-input rounded-xl px-3 py-2 text-sm text-center font-mono tracking-widest">
+                        <input type="password" id="confirm-pin-input" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="تأكيد الرمز (4 أرقام)"
+                            class="amin-input rounded-xl px-3 py-2 text-sm text-center font-mono tracking-widest">
+                        <div class="flex gap-2">
+                            <button type="button" onclick="saveAppPinSetting()" class="flex-grow bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3 py-2 rounded-xl transition">
+                                تفعيل / حفظ الرمز
+                            </button>
+                            <button type="button" onclick="disableAppPinSetting()" id="disable-pin-btn" class="hidden bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs px-3 py-2 rounded-xl transition">
+                                إلغاء القفل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-700">
+
+                <!-- 3. مزامنة البيانات على جوجل درايف -->
+                <div id="gdrive-sync-container" class="bg-slate-100 text-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-300 space-y-4 pb-5">
+                    <div class="bg-[#0288d1] text-white px-4 py-3 flex items-center justify-between shadow">
+                        <h3 class="text-base md:text-lg font-extrabold">مزامنة البيانات على جوجل درايف</h3>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="restoreFromDrive()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition shadow-sm">
+                                استعادة من درايف ⬇
+                            </button>
+                            <button onclick="triggerDriveSyncNow(true)" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                                مزامنة الآن ↻
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="px-4 space-y-4">
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 space-y-2.5 text-center">
+                            <p class="text-xs font-bold text-slate-700 underline">لتحديد البريد المتصل بجوجل درايف إضغط زر القلم</p>
+                            <div class="bg-[#b9f6ca] border border-emerald-400 rounded-xl px-4 py-3 flex items-center justify-between">
+                                <div class="text-center flex-grow px-2">
+                                    <div class="text-xs font-bold text-slate-800">الحساب المتصل بجوجل درايف</div>
+                                    <div id="connected-drive-email-display" class="text-sm font-extrabold text-slate-950 font-mono mt-0.5" dir="ltr">لم يتم تحديد حساب بعد</div>
+                                </div>
+                                <button onclick="openEmailChooser()" class="bg-white/80 hover:bg-white text-[#0288d1] p-2.5 rounded-xl shadow transition" title="تحديد أو تغيير البريد الإلكتروني">✏️</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 space-y-3">
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-xs font-bold text-slate-700">تفعيل المزامنة السحابية التلقائية</span>
+                                <input type="checkbox" id="drive-sync-enabled" onchange="saveDrivePreferences()" class="w-5 h-5 accent-[#0288d1]">
+                            </div>
+                            <div class="space-y-2 pt-1 border-t border-slate-100">
+                                <label class="flex items-center justify-between cursor-pointer py-1">
+                                    <span class="text-sm font-bold text-slate-800">إنشاء ملف جديد شهرياً</span>
+                                    <input type="checkbox" id="drive-monthly-file" checked onchange="saveDrivePreferences()" class="w-5 h-5 accent-[#0288d1] rounded">
+                                </label>
+                                <label class="flex items-center justify-between cursor-pointer py-1">
+                                    <span class="text-sm font-bold text-slate-800">إنشاء ملف جديد يومياً</span>
+                                    <input type="checkbox" id="drive-daily-file" onchange="saveDrivePreferences()" class="w-5 h-5 accent-[#0288d1] rounded">
+                                </label>
+                            </div>
+                            <div class="text-center pt-2 border-t border-slate-100 space-y-1">
+                                <div class="text-xs font-bold text-slate-700">حالة المزامنة: <span id="drive-sync-status-badge" class="text-emerald-600 font-extrabold">[في الانتظار]</span></div>
+                                <div class="text-xs font-bold text-slate-800">آخر عملية مزامنة: <span id="drive-last-sync-time" dir="ltr" class="font-mono text-slate-900">--</span></div>
+                            </div>
+                            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                                <span class="text-xs font-bold text-slate-700">إشعارات المزامنة</span>
+                                <input type="checkbox" id="drive-sync-notifications" checked onchange="saveDrivePreferences()" class="w-5 h-5 accent-[#0288d1]">
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-700">الحفظ التلقائي اليومي</span>
+                                <input type="checkbox" id="drive-scheduled-enabled" checked onchange="saveDrivePreferences()" class="w-5 h-5 accent-[#0288d1]">
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-700">وقت الحفظ اليومي</span>
+                                <input type="time" id="drive-scheduled-time" value="00:30" onchange="saveDrivePreferences()" class="bg-slate-100 border border-slate-300 text-slate-900 font-mono font-bold text-sm px-3 py-1 rounded-lg">
+                            </div>
+                            <div class="text-center text-xs font-bold text-slate-800">آخر حفظ يومي: <span id="drive-last-daily-time" dir="ltr" class="font-mono text-slate-900">--</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-700">
+
+                <!-- 4. النسخ الاحتياطي المحلي وإدارة البيانات -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-slate-200">النسخ الاحتياطي المحلي (JSON) وإدارة البيانات</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="exportBackupJSON()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition">💾 تصدير نسخة احتياطية (JSON)</button>
+                        <label class="bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition cursor-pointer">
+                            📂 استيراد نسخة احتياطية
+                            <input type="file" accept=".json" class="hidden" onchange="importBackupJSON(event)">
+                        </label>
+                        <button onclick="loadDemoData()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition">✨ تحميل بيانات تجريبية</button>
+                        <button onclick="confirmResetAllData()" class="bg-rose-700 hover:bg-rose-600 text-white font-bold text-sm px-4 py-2.5 rounded-xl transition">🗑️ تصفير كافة البيانات</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- نافذة الإضافة السريعة -->
+    <div id="quick-account-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-amber-500/40 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
+            <h3 class="text-lg font-extrabold text-amber-400">إضافة حساب جديد بسرعة</h3>
+            <div>
+                <label class="block text-xs text-slate-400 mb-1">الاسم *</label>
+                <input type="text" id="quick-acc-name" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">النوع</label>
+                    <select id="quick-acc-type" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                        <option value="customer">زبون</option>
+                        <option value="supplier">مورد</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">الهاتف</label>
+                    <input type="text" id="quick-acc-phone" class="amin-input w-full rounded-xl px-3 py-2 text-sm">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeQuickAccountModal()" class="bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold">إلغاء</button>
+                <button onclick="saveQuickAccount()" class="bg-amber-500 text-slate-950 px-5 py-2 rounded-xl text-sm font-black">إضافة واختيار</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة التنبيهات التفاعلية -->
+    <div id="smart-alerts-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-amber-500/40 rounded-2xl max-w-xl w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3 gap-2">
+                <div>
+                    <h3 class="text-lg font-extrabold text-amber-400">🔔 صندوق الإشعارات والتذكيرات التفاعلية</h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">اضغط على إشعار لتأشيره كمقروء وإخفاء التذكير، أو انتقل للحساب مباشرة</p>
+                </div>
+                <button onclick="document.getElementById('smart-alerts-modal').classList.add('hidden')" class="text-slate-400 hover:text-white text-2xl font-bold leading-none px-2">&times;</button>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-900/80 p-2.5 rounded-xl border border-slate-700/70">
+                <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                    <button type="button" onclick="setAlertFilter('all')" id="alert-filter-all" class="px-2.5 py-1 rounded-lg font-bold bg-amber-500 text-slate-950 transition">الكل</button>
+                    <button type="button" onclick="setAlertFilter('owed_to_us')" id="alert-filter-owed_to_us" class="px-2.5 py-1 rounded-lg font-bold bg-slate-800 text-amber-300 border border-amber-500/30 transition">عليه دين لنا</button>
+                    <button type="button" onclick="setAlertFilter('owed_by_us')" id="alert-filter-owed_by_us" class="px-2.5 py-1 rounded-lg font-bold bg-slate-800 text-rose-300 border border-rose-500/30 transition">نريد منه دين (لنا عليه/له علينا)</button>
+                    <button type="button" onclick="setAlertFilter('stock')" id="alert-filter-stock" class="px-2.5 py-1 rounded-lg font-bold bg-slate-800 text-sky-300 border border-sky-500/30 transition">المخزون</button>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="markAllAlertsAsRead()" class="bg-emerald-600/25 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-xs font-bold px-2.5 py-1 rounded-lg transition">
+                        ✓ قراءة الكل
+                    </button>
+                    <button type="button" onclick="restoreDismissedAlerts()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-bold px-2.5 py-1 rounded-lg transition">
+                        ↺ إظهار المخفية
+                    </button>
+                </div>
+            </div>
+
+            <div id="smart-alerts-list" class="space-y-2.5 max-h-80 overflow-y-auto text-sm pr-1"></div>
+        </div>
+    </div>
+
+    <!-- نافذة اختيار الإيميل (تظهر على الكمبيوتر أو عند عدم توفر Google Play Services) -->
+    <div id="email-picker-fallback-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-sky-500/50 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
+            <h3 class="text-lg font-extrabold text-sky-400">تحديد البريد المتصل بجوجل درايف</h3>
+            <p class="text-xs text-slate-300">أدخل عنوان بريدك الإلكتروني (Gmail) الذي تريد ربط المزامنة السحابية به:</p>
+            <input type="email" id="fallback-email-input" placeholder="example@gmail.com" dir="ltr" class="amin-input w-full rounded-xl px-3 py-2.5 text-sm font-mono">
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="document.getElementById('email-picker-fallback-modal').classList.add('hidden')" class="bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold">إلغاء</button>
+                <button onclick="confirmFallbackEmail()" class="bg-sky-600 hover:bg-sky-500 text-white px-5 py-2 rounded-xl text-sm font-black">حفظ وتأكيد البريد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة مسح الباركود بالكاميرا -->
+    <div id="barcode-camera-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-sky-500/50 rounded-2xl max-w-md w-full p-4 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                <h3 class="text-base font-extrabold text-sky-400">📷 وجّه الكاميرا نحو الباركود</h3>
+                <button onclick="closeCameraBarcodeScanner()" class="bg-rose-600 text-white px-3 py-1 rounded-lg text-xs font-bold">✕ إغلاق</button>
+            </div>
+            <div class="relative rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center">
+                <video id="barcode-video-preview" class="w-full h-full object-cover" playsinline autoplay muted></video>
+                <div class="absolute inset-x-6 top-1/2 -translate-y-1/2 h-0.5 bg-rose-500 shadow-[0_0_8px_#f43f5e]"></div>
+            </div>
+            <p id="barcode-camera-status" class="text-xs text-center text-slate-300">جاري تشغيل الكاميرا...</p>
+        </div>
+    </div>
+
+        <!-- نافذة البحث الشامل (Global Search Ctrl+K) -->
+    <div id="global-search-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start justify-center p-4 pt-14">
+        <div class="bg-slate-800 border border-sky-500/50 rounded-2xl max-w-xl w-full p-4 shadow-2xl space-y-3">
+            <div class="flex items-center gap-2 border-b border-slate-700 pb-2.5">
+                <span class="text-lg">🔍</span>
+                <input type="text" id="global-search-input" oninput="runGlobalSearch(this.value)"
+                    placeholder="ابحث في العملاء، الموردين، المواد، الباركود، الفواتير، السندات..."
+                    class="amin-input flex-grow rounded-xl px-3 py-2 text-sm">
+                <button type="button" onclick="closeGlobalSearch()" class="bg-rose-600 text-white px-3 py-2 rounded-xl text-xs font-bold">✕</button>
+            </div>
+            <div id="global-search-results" class="space-y-2 max-h-80 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- نافذة تحديد عدد ملصقات الباركود لصنف واحد -->
+    <div id="barcode-copies-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-sky-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <h3 class="text-base font-extrabold text-sky-400">🏷️ طباعة ملصقات باركود</h3>
+            <p class="text-xs text-slate-300">الصنف: <strong id="bc-prompt-item-name" class="text-amber-300"></strong></p>
+            <input type="hidden" id="bc-prompt-item-id">
+            <div>
+                <label class="block text-xs text-slate-400 font-bold mb-1">عدد اللصاقات المطلوبة</label>
+                <input type="number" id="bc-prompt-copies-input" value="6" min="1" max="500" class="amin-input w-full rounded-xl px-3 py-2 text-center font-mono font-bold text-base">
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="document.getElementById('barcode-copies-modal').classList.add('hidden')" class="bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-xs font-bold">إلغاء</button>
+                <button type="button" onclick="confirmPromptPrintItemBarcode()" class="bg-sky-600 hover:bg-sky-500 text-white px-5 py-2 rounded-xl text-xs font-black">🖨️ طباعة الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- الأزرار العائمة السريعة (FAB) أسفل يسار الشاشة -->
+    <div class="fixed bottom-5 left-4 z-40 flex flex-col items-center gap-2.5 no-print">
+
+        <button type="button" onclick="openGlobalSearch()" title="البحث الشامل (Ctrl+K)"
+            class="w-11 h-11 rounded-full bg-sky-600 hover:bg-sky-500 text-white border border-sky-300/40 shadow-xl flex items-center justify-center text-lg transition">
+            🔍
+        </button>
+        <button type="button" onclick="switchTab('sales')" title="فاتورة مبيعات جديدة"
+            class="w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white border-2 border-emerald-300/60 shadow-2xl flex items-center justify-center text-2xl font-black transition">
+            +
+        </button>
+    </div>
+
+    <div id="print-area"></div>
+
+    <!-- ==================== المنطق البرمجي الكامل مع الحفظ التلقائي على القرص ==================== -->
+    <script src="accounting-core.js"></script>
+    <script src="assets/libs/print-core.js"></script>
+    <script src="assets/libs/pdf-raster.js"></script>
+    <script src="app.js"></script>
+<script src="pro-suite.js"></script>
+<script src="reports-pro.js"></script>
+<script src="biometric.js"></script>
+<script src="backup-pro.js"></script>
+<script src="sync-core.js"></script>
+<script src="settings-pro.js"></script>
+<script src="shell.js"></script>
+    <script src="onboarding.js"></script>
+    <script src="i18n-dict.js"></script>
+    <script src="i18n.js"></script>
+    <script src="pa-polish.js"></script>
+
+    <script>
+    (function() {
+        function bindPaMenu() {
+            const btn = document.getElementById('pa-menu-btn');
+            const panel = document.getElementById('pa-panel');
+            if (!btn || !panel || btn.dataset.paBound) return;
+            btn.dataset.paBound = '1';
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isOpen = panel.classList.toggle('open');
+                panel.classList.toggle('show', isOpen);
+                btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+            document.addEventListener('click', function(e) {
+                if (!panel.contains(e.target) && !btn.contains(e.target)) {
+                    panel.classList.remove('open', 'show');
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindPaMenu);
+        } else {
+            bindPaMenu();
+        }
+    })();
+    </script>
+
+    <script>
+    (function() {
+        function syncAndroidViewportClass() {
+            var isNativeAndroid = /Android/i.test(navigator.userAgent) || !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'android') || !!window.AndroidNative;
+            var isSmallScreen = window.innerWidth < 900;
+            document.body.classList.toggle('pa-android', isNativeAndroid || isSmallScreen);
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', syncAndroidViewportClass);
+        } else {
+            syncAndroidViewportClass();
+        }
+        window.addEventListener('resize', syncAndroidViewportClass);
+    })();
+    </script>
+
+</body>
+</html>

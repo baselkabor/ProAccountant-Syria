@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">محاسب محترف سوريا</string>
+    <string name="title_activity_main">محاسب محترف سوريا</string>
+    <string name="package_name">com.mhtrfsyria.accountant</string>
+    <string name="custom_url_scheme">com.mhtrfsyria.accountant</string>
+</resources>

@@ -1,0 +1,29 @@
+/* ===== ProAccountant — تصميم مستوحى من تطبيقات المحاسبة الاحترافية ===== */
+/* قائمة التقارير: صفوف عريضة بأيقونة وسهم */
+#view-profit .grid.grid-cols-2{grid-template-columns:1fr!important;gap:8px!important}
+#view-profit .grid.grid-cols-2>button{display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 14px!important;border-radius:14px!important;font-size:14px!important;text-align:start!important;
+  background:linear-gradient(135deg,rgba(25,70,115,.9),rgba(14,40,72,.95))!important;border:1px solid rgba(56,189,248,.3)!important;color:#e0f2fe!important;position:relative}
+#view-profit .grid.grid-cols-2>button::after{content:"‹";margin-inline-start:auto;font-size:22px;color:#7dd3fc;line-height:1}
+html[dir=ltr] #view-profit .grid.grid-cols-2>button::after{content:"›"}
+body.day-mode #view-profit .grid.grid-cols-2>button{background:#f1f7fd!important;color:#0c4a6e!important}
+/* بطاقات الأرباح: أيقونة + عنوان + قيمة */
+#profit-metrics-grid{grid-template-columns:1fr!important;gap:10px!important}
+.pa-metric{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:20px;background:linear-gradient(135deg,rgba(25,58,96,.88),rgba(13,30,56,.96));border:1px solid rgba(56,189,248,.26);box-shadow:0 6px 16px rgba(2,8,20,.35)}
+.pa-metric-ic{flex:0 0 52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.25)}
+.pa-metric-t{font-size:13px;font-weight:800;color:#cbd5e1}
+.pa-metric-v{font-size:22px;font-weight:900;font-family:ui-monospace,monospace;margin-top:2px}
+body.day-mode .pa-metric{background:#fff}body.day-mode .pa-metric-t{color:#334155}
+@media(min-width:700px){#profit-metrics-grid{grid-template-columns:repeat(2,1fr)!important}}
+/* أزرار التواصل مع المدينين */
+.pa-act{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;color:#fff;text-decoration:none;white-space:nowrap}
+.pa-act-wa{background:#16a34a}.pa-act-call{background:#0284c7}.pa-act-sms{background:#ea7a1a}
+/* أزرار الكمية + / − في الفاتورة */
+.pa-qty{display:flex;align-items:center;justify-content:center;gap:6px}
+.pa-qty button{width:34px;height:34px;min-height:34px!important;padding:0!important;border-radius:50%!important;font-size:20px;font-weight:900;line-height:1;color:#fff;flex:0 0 34px}
+.pa-qty .pa-minus{background:#dc2626}.pa-qty .pa-plus{background:#16a34a}
+.pa-qty input.row-qty{width:56px!important;min-width:0;text-align:center}
+/* معاينة الطباعة */
+#android-receipt-paper{-webkit-overflow-scrolling:touch}
+/* تحسين شبكة اختيار الأصناف */
+#picker-grid .card{box-shadow:0 4px 12px rgba(0,0,0,.25)}
+#picker-grid .card img{display:block}

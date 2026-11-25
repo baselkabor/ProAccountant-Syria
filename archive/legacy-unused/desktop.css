@@ -1,0 +1,164 @@
+/* ===== ProAccountant Syria — Pro Desktop Workspace Layout (v3) ===== */
+:root {
+    --pa-accent: #38bdf8;
+    --pa-accent-2: #0ea5e9;
+    --pa-bg-desk: radial-gradient(circle at top, #132238 0%, #0b1320 55%, #070d17 100%);
+    --pa-card-desk: rgba(15, 27, 48, 0.92);
+    --pa-line-desk: rgba(56, 189, 248, 0.22);
+}
+
+@media (min-width: 900px) {
+    html {
+        font-size: 15px;
+    }
+
+    body.app-shell {
+        background: var(--pa-bg-desk) !important;
+        font-size: 15px !important;
+        line-height: 1.55 !important;
+    }
+
+    /* ترويسة سطح المكتب: شريط علوي واضح ومنظم بدون تزاحم */
+    body.app-shell header.pa-header {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 50 !important;
+        background: rgba(10, 19, 34, 0.96) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--pa-line-desk) !important;
+    }
+
+    body.app-shell .pa-header .pa-bar {
+        max-width: 1400px;
+        margin: 0 auto;
+        height: 54px !important;
+        padding: 0 20px !important;
+        gap: 12px !important;
+    }
+
+    body.app-shell .pa-title {
+        font-size: 18px !important;
+        font-weight: 900 !important;
+    }
+
+    body.app-shell #pa-menu-btn {
+        display: none !important;
+    }
+
+    body.app-shell .pa-panel {
+        display: flex !important;
+        position: static !important;
+        max-width: 1400px !important;
+        max-height: none !important;
+        margin: 0 auto !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        background: rgba(13, 25, 45, 0.78) !important;
+        border: none !important;
+        border-top: 1px solid rgba(56, 189, 248, 0.16) !important;
+        border-radius: 0 !important;
+        padding: 8px 20px !important;
+        box-shadow: none !important;
+    }
+
+    body.app-shell .pa-dev {
+        width: auto !important;
+        padding-top: 0 !important;
+        font-size: 12px !important;
+        color: #94a3b8 !important;
+    }
+
+    /* شريط التنقل الفرعي داخل الصفحات */
+    body.app-shell #app-subbar {
+        top: 0 !important;
+        padding: 10px 20px !important;
+        background: rgba(11, 22, 40, 0.95) !important;
+        border-bottom: 1px solid var(--pa-line-desk) !important;
+    }
+
+    body.app-shell #app-subbar .ttl {
+        font-size: 18px !important;
+        font-weight: 900 !important;
+    }
+
+    /* الحاوية الرئيسية بعرض مريح ومتوازن لشاشات الكمبيوتر */
+    body.app-shell main {
+        max-width: 1400px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 18px 20px 72px 20px !important;
+    }
+
+    /* بطاقة الترحيب العلوية */
+    body.app-shell #home-greeting {
+        max-width: none !important;
+        padding: 14px 20px !important;
+        margin-bottom: 14px !important;
+        border-radius: 18px !important;
+    }
+
+    body.app-shell #home-greeting .t {
+        font-size: 16px !important;
+    }
+
+    body.app-shell #home-greeting .s {
+        font-size: 12.5px !important;
+    }
+
+    /* بطاقات KPI الأربعة في صف متوازن */
+    body.app-shell #view-home .grid.grid-cols-2 {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 14px !important;
+    }
+
+    /* شبكة النوافذ الـ 12: 4 أعمدة × 3 صفوف بمساحات مريحة وواضحة */
+    body.app-shell #view-home .grid.grid-cols-3 {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 14px !important;
+    }
+
+    body.app-shell #view-home .grid.grid-cols-3 > button {
+        min-height: 112px !important;
+        max-height: 128px !important;
+        padding: 16px 12px !important;
+        border-radius: 18px !important;
+        gap: 8px !important;
+    }
+
+    body.app-shell #view-home .grid.grid-cols-3 > button span:first-child {
+        font-size: 30px !important;
+    }
+
+    body.app-shell #view-home .grid.grid-cols-3 > button span:last-child {
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+    }
+
+    /* تحسين الجداول والحقول في الفواتير والمخزون والحسابات */
+    body.app-shell table th {
+        font-size: 13px !important;
+        padding: 11px 10px !important;
+    }
+
+    body.app-shell table td {
+        font-size: 13.5px !important;
+        padding: 9px 10px !important;
+    }
+
+    body.app-shell input.amin-input,
+    body.app-shell select.amin-input {
+        min-height: 40px !important;
+        font-size: 14px !important;
+        border-radius: 12px !important;
+    }
+
+    /* أزرار الاختصار العائمة أسفل اليسار */
+    body.app-shell .fixed.bottom-5.left-4 {
+        bottom: 20px !important;
+        left: 20px !important;
+        gap: 10px !important;
+    }
+}

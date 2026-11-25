@@ -1,0 +1,143 @@
+/* ===== ProAccountant Syria — Polished Android UI & Grid Styling (v24) ===== */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body.pa-android {
+    font-size: 14.5px !important;
+    line-height: 1.5 !important;
+    overflow-x: hidden;
+}
+
+body.pa-android main {
+    max-width: 960px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 10px 10px 96px 10px !important;
+}
+
+/* شريط الترويسة للأندرويد */
+body.pa-android .pa-header .pa-bar {
+    height: 52px !important;
+    padding: 0 10px !important;
+    gap: 8px !important;
+}
+
+body.pa-android .pa-title {
+    font-size: 15px !important;
+    font-weight: 900 !important;
+}
+
+/* بطاقات الإجمالي والخصم في الفاتورة: شبكة متناسقة بدل التكدس العمودي الطويل */
+body.pa-android #view-invoice .bg-slate-900.border-t.border-slate-700.p-4 > .flex.flex-wrap.items-center.gap-4 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+}
+
+body.pa-android #view-invoice .bg-slate-900.border-t.border-slate-700.p-4 > .flex.flex-wrap.items-center.gap-4 > div:nth-child(3) {
+    grid-column: 1 / -1 !important;
+}
+
+body.pa-android #view-invoice .bg-slate-900.border-t.border-slate-700.p-4 > .flex.flex-wrap.items-center.gap-4 > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+}
+
+body.pa-android #inv-total-usd {
+    font-size: 20px !important;
+}
+
+body.pa-android #inv-total-syp {
+    font-size: 16px !important;
+}
+
+/* أزرار حفظ وطباعة الفاتورة: شبكة 2×2 متساوية الارتفاع والجاذبية */
+body.pa-android #view-invoice .bg-slate-900.border-t.border-slate-700.p-4 > .flex.flex-wrap.items-center.gap-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+}
+
+body.pa-android #view-invoice .bg-slate-900.border-t.border-slate-700.p-4 > .flex.flex-wrap.items-center.gap-2 > button {
+    width: 100% !important;
+    min-height: 46px !important;
+    padding: 10px 10px !important;
+    border-radius: 13px !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+/* حقول الصندوق والمخزن وطريقة الدفع ورقم الإيصال: عمودان متناسقان */
+body.pa-android #view-invoice .bg-slate-900\/70.border-t.border-slate-700.p-4 > .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+}
+
+/* شبكة الرئيسية */
+body.pa-android #view-home .grid.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+body.pa-android #view-home .grid.grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+body.pa-android #view-home .grid.grid-cols-3 > button {
+    min-height: 94px !important;
+    max-height: 112px !important;
+    padding: 10px 6px !important;
+    border-radius: 18px !important;
+    gap: 6px !important;
+}
+
+body.pa-android #view-home .grid.grid-cols-3 > button span:first-child {
+    font-size: 26px !important;
+}
+
+body.pa-android #view-home .grid.grid-cols-3 > button span:last-child {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+body.pa-android input.amin-input,
+body.pa-android select.amin-input {
+    min-height: 42px !important;
+    font-size: 14px !important;
+    border-radius: 12px !important;
+}
+
+/* الأزرار العائمة أسفل اليسار */
+body.pa-android .fixed.bottom-5.left-4 {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 10px !important;
+    gap: 8px !important;
+}
+
+body.pa-android .fixed.bottom-5.left-4 > button {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45) !important;
+}
+/* ترتيب الحقول العلوية للفاتورة وشريط الباركود والإدخال الذكي على الأندرويد */
+body.pa-android #view-invoice .p-4.grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+body.pa-android #view-invoice .p-4.grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-5 > div:nth-child(2) {
+    grid-column: 1 / -1 !important;
+}
+
+body.pa-android #smart-input-box,
+body.pa-android #barcode-scan-input {
+    min-height: 44px !important;
+}

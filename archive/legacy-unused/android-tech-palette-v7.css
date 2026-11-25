@@ -1,0 +1,268 @@
+/* ===== ProAccountant Syria — Harmonious Technical Slate-Cobalt-Cyan Palette (v7) ===== */
+:root {
+    --tech-bg-night: linear-gradient(180deg, #0b1320 0%, #0e1a2d 55%, #080f1a 100%);
+    --tech-header-night: rgba(11, 20, 36, 0.94);
+    --tech-surface-night: rgba(16, 28, 48, 0.92);
+    --tech-card-night: linear-gradient(155deg, rgba(25, 58, 96, 0.88) 0%, rgba(15, 34, 60, 0.95) 100%);
+    --tech-border-night: rgba(56, 189, 248, 0.26);
+    --tech-border-hover-night: rgba(56, 189, 248, 0.62);
+    --tech-accent-night: #38bdf8;
+    --tech-text-night: #f1f5f9;
+    --tech-sheen-night: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 70%);
+
+    --tech-bg-day: linear-gradient(180deg, #eef4fa 0%, #f6f9fc 60%, #e9f0f8 100%);
+    --tech-header-day: rgba(255, 255, 255, 0.96);
+    --tech-surface-day: #ffffff;
+    --tech-card-day: linear-gradient(160deg, #ffffff 0%, #f1f6fc 100%);
+    --tech-border-day: rgba(15, 118, 186, 0.22);
+    --tech-border-hover-day: rgba(2, 132, 199, 0.55);
+    --tech-accent-day: #0369a1;
+    --tech-text-day: #0f172a;
+    --tech-sheen-day: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+/* الوضع الليلي التقني المتوازن */
+body.app-shell {
+    background: var(--tech-bg-night) !important;
+    color: var(--tech-text-night) !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body.app-shell header {
+    background: var(--tech-header-night) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--tech-border-night) !important;
+    box-shadow: 0 6px 20px rgba(2, 8, 20, 0.35) !important;
+}
+
+body.app-shell header h1 {
+    color: var(--tech-accent-night) !important;
+    text-shadow: none !important;
+    font-weight: 900 !important;
+}
+
+body.app-shell #app-subbar {
+    background: rgba(12, 23, 41, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--tech-border-night);
+}
+
+body.app-shell #app-subbar button {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(155deg, #163254 0%, #0e2038 100%);
+    color: #e2e8f0;
+    border: 1px solid var(--tech-border-night);
+    border-radius: 14px;
+    min-width: 44px;
+    height: 44px;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(2, 8, 20, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    transition: transform 0.12s ease, border-color 0.15s ease;
+}
+
+body.app-shell #app-subbar button:active {
+    transform: scale(0.95);
+    border-color: var(--tech-border-hover-night);
+}
+
+/* بطاقات وحاوية الرئيسية بألوان تقنية هادئة ولمعة راقية */
+body.app-shell #view-home > div {
+    position: relative;
+    overflow: hidden;
+    background: var(--tech-surface-night) !important;
+    border: 1px solid var(--tech-border-night) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 14px 30px rgba(2, 8, 20, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+body.app-shell #view-home h2 {
+    color: var(--tech-accent-night) !important;
+    text-shadow: none !important;
+}
+
+body.app-shell #view-home .grid > button {
+    position: relative;
+    overflow: hidden;
+    background: var(--tech-card-night) !important;
+    border: 1px solid var(--tech-border-night) !important;
+    border-radius: 20px !important;
+    min-height: 106px;
+    padding: 14px 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    color: var(--tech-text-night) !important;
+    box-shadow: 0 8px 18px rgba(2, 8, 20, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+    transition: transform 0.14s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.app-shell #view-home .grid > button::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 44%;
+    background: var(--tech-sheen-night);
+    pointer-events: none;
+}
+
+body.app-shell #view-home .grid > button:hover {
+    border-color: var(--tech-border-hover-night) !important;
+    box-shadow: 0 10px 22px rgba(2, 8, 20, 0.48), 0 0 12px rgba(56, 189, 248, 0.18) !important;
+}
+
+body.app-shell #view-home .grid > button:active {
+    transform: scale(0.95) !important;
+}
+
+body.app-shell #view-home .grid > button span:first-child {
+    position: relative;
+    z-index: 1;
+    font-size: 30px !important;
+    line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+
+body.app-shell #view-home .grid > button span:last-child {
+    position: relative;
+    z-index: 1;
+    text-shadow: none !important;
+}
+
+/* حقول الإدخال والأقسام التقنية */
+body.app-shell section > div {
+    border-radius: 20px;
+    border-color: var(--tech-border-night);
+    box-shadow: 0 8px 20px rgba(2, 8, 20, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+body.app-shell input.amin-input,
+body.app-shell select.amin-input {
+    min-height: 44px;
+    border-radius: 14px;
+    background-color: #091322;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    color: #f8fafc;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+body.app-shell input.amin-input:focus,
+body.app-shell select.amin-input:focus {
+    border-color: var(--tech-accent-night);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+#open-picker-btn {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px !important;
+    background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(125, 211, 252, 0.4) !important;
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+/* الوضع النهاري التقني المتوازن */
+body.day-mode,
+body.day-mode.app-shell {
+    background: var(--tech-bg-day) !important;
+    color: var(--tech-text-day) !important;
+}
+
+body.day-mode header,
+body.day-mode nav,
+body.day-mode footer {
+    background: var(--tech-header-day) !important;
+    color: var(--tech-text-day) !important;
+    border-color: var(--tech-border-day) !important;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.day-mode.app-shell header h1 {
+    color: var(--tech-accent-day) !important;
+    text-shadow: none !important;
+}
+
+body.day-mode #app-subbar {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-bottom: 1px solid var(--tech-border-day) !important;
+}
+
+body.day-mode #app-subbar button {
+    background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%) !important;
+    color: var(--tech-accent-day) !important;
+    border: 1px solid var(--tech-border-day) !important;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+body.day-mode #app-subbar .ttl {
+    color: var(--tech-text-day) !important;
+}
+
+body.day-mode section > div,
+body.day-mode .bg-slate-800,
+body.day-mode .bg-slate-800\/90,
+body.day-mode .bg-slate-800\/95,
+body.day-mode .bg-slate-800\/80,
+body.day-mode .bg-slate-800\/70,
+body.day-mode .bg-slate-800\/40,
+body.day-mode .bg-slate-900,
+body.day-mode .bg-slate-900\/90,
+body.day-mode .bg-slate-900\/80,
+body.day-mode .bg-slate-900\/70,
+body.day-mode .bg-slate-900\/60,
+body.day-mode .bg-slate-900\/50 {
+    background-color: var(--tech-surface-day) !important;
+    color: var(--tech-text-day) !important;
+    border-color: var(--tech-border-day) !important;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.day-mode #view-home > div {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid var(--tech-border-day) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07) !important;
+}
+
+body.day-mode #view-home h2 {
+    color: var(--tech-accent-day) !important;
+    text-shadow: none !important;
+}
+
+body.day-mode #view-home .grid > button {
+    background: var(--tech-card-day) !important;
+    color: var(--tech-text-day) !important;
+    border: 1px solid var(--tech-border-day) !important;
+    box-shadow: 0 6px 14px rgba(2, 132, 199, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+body.day-mode #view-home .grid > button::before {
+    background: var(--tech-sheen-day);
+}
+
+body.day-mode #view-home .grid > button:hover {
+    border-color: var(--tech-border-hover-day) !important;
+}
+
+body.day-mode .amin-input,
+body.day-mode #exchange-rate-input {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.day-mode th {
+    background-color: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+body.day-mode .text-slate-100,
+body.day-mode .text-slate-200,
+body.day-mode .text-slate-300,
+body.day-mode .text-slate-400 {
+    color: #334155 !important;
+}

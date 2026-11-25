@@ -1,0 +1,168 @@
+/* ===== ProAccountant Syria — Android Balanced Grid & Spacing Polish (v11) ===== */
+body.app-shell main {
+    max-width: 960px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 10px 12px 84px 12px !important;
+}
+
+/* بطاقة الترحيب في أعلى الرئيسية */
+body.app-shell #home-greeting {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding: 10px 14px !important;
+    border-radius: 18px !important;
+    margin-bottom: 10px !important;
+    background: linear-gradient(135deg, rgba(16, 42, 78, 0.92), rgba(9, 24, 48, 0.95)) !important;
+    border: 1px solid rgba(56, 189, 248, 0.28) !important;
+    box-shadow: 0 6px 18px rgba(2, 8, 22, 0.35) !important;
+}
+
+body.app-shell #home-greeting img {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 11px !important;
+    flex-shrink: 0;
+}
+
+body.app-shell #home-greeting .t {
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    color: #f8fafc !important;
+}
+
+body.app-shell #home-greeting .s {
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+}
+
+body.app-shell #home-greeting button {
+    background: rgba(2, 132, 199, 0.22) !important;
+    color: #7dd3fc !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+    border-radius: 12px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0;
+}
+
+/* شبكة بطاقات KPI المتناسقة */
+body.app-shell #view-home .grid.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+@media (min-width: 768px) {
+    body.app-shell #view-home .grid.grid-cols-2 {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}
+
+/* شبكة النوافذ الـ 12 بأبعاد متناسقة لأندرويد */
+body.app-shell #view-home .grid.grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+@media (min-width: 700px) {
+    body.app-shell #view-home .grid.grid-cols-3 {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+    }
+}
+
+body.app-shell #view-home .grid.grid-cols-3 > button {
+    min-height: 92px !important;
+    max-height: 112px !important;
+    padding: 10px 6px !important;
+    border-radius: 18px !important;
+    gap: 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+body.app-shell #view-home .grid.grid-cols-3 > button span:first-child {
+    font-size: 26px !important;
+    line-height: 1.1 !important;
+}
+
+body.app-shell #view-home .grid.grid-cols-3 > button span:last-child {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* الأزرار العائمة مرتبة ومضغوطة دون حجب المحتوى */
+body.app-shell .fixed.bottom-5.left-4 {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 12px !important;
+    gap: 8px !important;
+}
+
+body.app-shell .fixed.bottom-5.left-4 > button:last-child {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 22px !important;
+}
+
+body.app-shell .fixed.bottom-5.left-4 > button:not(:last-child) {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 15px !important;
+    opacity: 0.92;
+}
+
+/* الوضع النهاري مع الترتيب الجديد */
+body.day-mode.app-shell #home-greeting {
+    background: linear-gradient(135deg, #ffffff, #e0f2fe) !important;
+    border-color: rgba(2, 132, 199, 0.3) !important;
+}
+body.day-mode.app-shell #home-greeting .t {
+    color: #0f172a !important;
+}
+body.day-mode.app-shell #home-greeting .s {
+    color: #475569 !important;
+}
+
+/* ===== Top-Right 3-Dots Menu Dropdown (#pa-panel) ===== */
+.pa-header {
+    position: relative;
+    z-index: 60;
+}
+.pa-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 10px;
+    right: 10px;
+    max-width: 520px;
+    margin-inline-start: auto;
+    z-index: 9990;
+    background: linear-gradient(165deg, #102442 0%, #091529 100%);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-radius: 18px;
+    padding: 12px;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.65);
+}
+.pa-panel.open,
+.pa-panel.show {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+}
+body.day-mode .pa-panel {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: rgba(2, 132, 199, 0.35);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.16);
+}
